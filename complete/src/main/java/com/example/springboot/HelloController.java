@@ -12,12 +12,7 @@ public class HelloController {
 		return "Greetings from Spring Boot!";
 	}
 
-	@RequestMapping(value="/Login")
-	public static String Welcome() {
-		return "Mobile \n" +
-				"Login Client \n" +
-				"Login Costumer";
-	}
+
 
 
 
