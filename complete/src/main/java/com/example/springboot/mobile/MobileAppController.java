@@ -3,6 +3,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+
 @RestController
 public class MobileAppController {
 
@@ -10,7 +13,7 @@ public class MobileAppController {
     private MobileAppService mobileAppService;
 
     @RequestMapping(value="/Login")
-    public String Login() {
+    public String Register() throws GeneralSecurityException, IOException {
         return mobileAppService.RegisterMobile();
     }
 }
