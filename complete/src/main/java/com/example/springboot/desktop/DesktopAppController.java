@@ -1,5 +1,8 @@
 package com.example.springboot.desktop;
+import com.example.springboot.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,8 +15,8 @@ public class DesktopAppController {
     @Autowired
     private DesktopAppService desktopAppService;
 
-    @RequestMapping(value="/LoginDesktop")
-    public String Register() throws GeneralSecurityException, IOException {
-        return desktopAppService.RegisterDesktop();
+    @PostMapping(value="/LoginDesktop")
+    public String Register(@RequestBody User userRegistration) throws GeneralSecurityException, IOException {
+        return desktopAppService.RegisterDesktop(userRegistration);
     }
 }
