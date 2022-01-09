@@ -1,5 +1,10 @@
-/Users/luciasilva/Documents/Tecnico/4ano/1Semestre/P2/SIRS/Projeto/SIRS/complete/src/main/java/com/example/springboot/MobileApp.java
+/Users/luciasilva/Documents/Tecnico/4ano/1Semestre/P2/SIRS/Projeto/SIRS/complete/src/main/java/com/example/springboot/helpers/DBHelper.java
+/Users/luciasilva/Documents/Tecnico/4ano/1Semestre/P2/SIRS/Projeto/SIRS/complete/src/main/java/com/example/springboot/mobile/MobileApp.java
+/Users/luciasilva/Documents/Tecnico/4ano/1Semestre/P2/SIRS/Projeto/SIRS/complete/src/main/java/com/example/springboot/desktop/DesktopAppController.java
+/Users/luciasilva/Documents/Tecnico/4ano/1Semestre/P2/SIRS/Projeto/SIRS/complete/src/main/java/com/example/springboot/desktop/DesktopApp.java
 /Users/luciasilva/Documents/Tecnico/4ano/1Semestre/P2/SIRS/Projeto/SIRS/complete/src/main/java/com/example/springboot/Application.java
-/Users/luciasilva/Documents/Tecnico/4ano/1Semestre/P2/SIRS/Projeto/SIRS/complete/src/main/java/com/example/springboot/HelloController.java
-/Users/luciasilva/Documents/Tecnico/4ano/1Semestre/P2/SIRS/Projeto/SIRS/complete/src/main/java/com/example/springboot/MobileAppService.java
-/Users/luciasilva/Documents/Tecnico/4ano/1Semestre/P2/SIRS/Projeto/SIRS/complete/src/main/java/com/example/springboot/MobileAppController.java
+/Users/luciasilva/Documents/Tecnico/4ano/1Semestre/P2/SIRS/Projeto/SIRS/complete/src/main/java/com/example/springboot/mobile/MobileAppController.java
+/Users/luciasilva/Documents/Tecnico/4ano/1Semestre/P2/SIRS/Projeto/SIRS/complete/src/main/java/com/example/springboot/user/User.java
+/Users/luciasilva/Documents/Tecnico/4ano/1Semestre/P2/SIRS/Projeto/SIRS/complete/src/main/java/com/example/springboot/helpers/KeyGenerator.java
+/Users/luciasilva/Documents/Tecnico/4ano/1Semestre/P2/SIRS/Projeto/SIRS/complete/src/main/java/com/example/springboot/desktop/DesktopAppService.java
+/Users/luciasilva/Documents/Tecnico/4ano/1Semestre/P2/SIRS/Projeto/SIRS/complete/src/main/java/com/example/springboot/mobile/MobileAppService.java

@@ -1,5 +1,10 @@
-com/example/springboot/MobileApp.class
-com/example/springboot/HelloController.class
+com/example/springboot/desktop/DesktopAppService.class
+com/example/springboot/user/User.class
+com/example/springboot/mobile/MobileAppService.class
 com/example/springboot/Application.class
-com/example/springboot/MobileAppController.class
-com/example/springboot/MobileAppService.class
+com/example/springboot/mobile/MobileApp.class
+com/example/springboot/helpers/KeyGenerator.class
+com/example/springboot/mobile/MobileAppController.class
+com/example/springboot/helpers/DBHelper.class
+com/example/springboot/desktop/DesktopAppController.class
+com/example/springboot/desktop/DesktopApp.class

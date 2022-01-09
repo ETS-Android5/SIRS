@@ -1,9 +1,7 @@
 package com.example.springboot.desktop;
 
-import com.example.springboot.KeyGenerator;
+import com.example.springboot.helpers.KeyGenerator;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.*;
 import java.util.ArrayList;

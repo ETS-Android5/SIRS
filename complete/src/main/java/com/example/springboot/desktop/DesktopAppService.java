@@ -1,5 +1,6 @@
 package com.example.springboot.desktop;
 
+import com.example.springboot.helpers.DBHelper;
 import com.example.springboot.user.User;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class DesktopAppService {
         //is received a public (and private key?) or generated
 
         DesktopApp desktop = new DesktopApp(deviceId++);
-
+        //DBHelper.AddDeviceToDB(device, desktop);
         desktopList.put(deviceId, desktop);
 
         return "olá!";

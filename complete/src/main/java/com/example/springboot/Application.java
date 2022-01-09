@@ -1,21 +1,19 @@
 package com.example.springboot;
 
-import java.io.IOException;
-import java.util.Arrays;
-
-import org.springframework.boot.CommandLineRunner;
+import com.example.springboot.helpers.DBHelper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 
-//@SpringBootApplication
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
+@SpringBootApplication
+// @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
 public class Application {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ClassNotFoundException {
+
+		DBHelper.SQLinit();
 		SpringApplication.run(Application.class, args);
+
 	}
 
 

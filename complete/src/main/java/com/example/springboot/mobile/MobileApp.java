@@ -1,12 +1,8 @@
 package com.example.springboot.mobile;
 
-import com.example.springboot.KeyGenerator;
+import com.example.springboot.helpers.KeyGenerator;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.*;
 import java.util.ArrayList;
 
