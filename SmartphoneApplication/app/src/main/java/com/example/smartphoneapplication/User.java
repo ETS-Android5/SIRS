@@ -1,9 +1,13 @@
-package com.example.springboot.user;
+package com.example.smartphoneapplication;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class User {
-
+    @JsonProperty("ID")
     private int userId;
+    @JsonProperty("Username")
     private String username;
+    @JsonProperty("Password")
     private String password;
 
     public User(int id, String name, String pass) {
@@ -23,6 +27,6 @@ public class User {
     public String getPassword() {
         return this.password;
     }
-
 }
+
 
