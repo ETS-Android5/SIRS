@@ -10,20 +10,22 @@ public class MobileApp {
 
     private int deviceId;
     public String publicKey;
-    private String privateKey;
+    public String secretKey;
 
-    KeyGenerator keyGenerator = new KeyGenerator();
+    KeyGenerator keyGenerator = new KeyGenerator(); //key generator needs to create a DH key
 
     public MobileApp(int id) throws GeneralSecurityException, IOException {
 
         deviceId = id;
-        String path = "/complete/src/main/java/com/example/springboot/mobile/keys";
+        String path = "/src/main/java/com/example/springboot/mobile/keys";
 
         ArrayList<String> keys = keyGenerator.generateKeys(deviceId, path);
 
         publicKey = keys.get(0);
-        privateKey = keys.get(1);
+        secretKey = keys.get(1);
+
     }
+
 
 
 }
