@@ -19,17 +19,11 @@ public class DBHelper {
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-            //statement.executeUpdate("drop table if exists person");
-            //statement.executeUpdate("create table person (id integer, name string)");
-            statement.executeUpdate("insert into person values(3, 'lucia')");
-            statement.executeUpdate("insert into person values(4, 'appleton')");
-            ResultSet rs = statement.executeQuery("select * from person");
-            while(rs.next())
-            {
-                // read the result set
-                System.out.println("name = " + rs.getString("name"));
-                System.out.println("id = " + rs.getInt("id"));
-            }
+            //create user table
+            statement.executeUpdate("drop table if exists user");
+            statement.executeUpdate("create table user (id integer, username string, password string, keyPath string)");
+
+
         }
         catch(SQLException e)
         {
@@ -52,36 +46,46 @@ public class DBHelper {
         }
     }
 
-    /*public static void createNewTable() {
-        // SQLite connection string
-        String url = "jdbc:sqlite:C://sqlite/db/tests.db";
+    public static void insertUser(int id, String username, String password, String keyPath) throws ClassNotFoundException, SQLException {
+        Connection connection = null;
+        connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
-        // SQL statement for creating a new table
-        String sql = "CREATE TABLE IF NOT EXISTS warehouses (\n"
-                + "	id integer PRIMARY KEY,\n"
-                + "	name text NOT NULL,\n"
-                + "	capacity real\n"
-                + ");";
+        String sql = "INSERT INTO user(id,username, password) VALUES(?,?,?)";
 
-        try (Connection conn = DriverManager.getConnection(url);
-             Statement stmt = conn.createStatement()) {
-            // create a new table
-            stmt.execute(sql);
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.setString(2, username);
+            pstmt.setString(3, password);
+            pstmt.setString(4, keyPath);
+            pstmt.executeUpdate();
+
+            /*Statement statement = connection.createStatement();
+
+            ResultSet rs = statement.executeQuery("select * from mobileDevice");
+            while(rs.next())
+            {
+                System.out.println("no while");
+                // read the result set
+                System.out.println("id = " + rs.getInt("id"));
+                System.out.println("username = " + rs.getString("username"));
+                System.out.println("password = " + rs.getString("password"));
+            }*/
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+
+        finally
+        {
+            try
+            {
+                if(connection != null)
+                    connection.close();
+            }
+            catch(SQLException e)
+            {
+                // connection close failed.
+                System.err.println(e);
+            }
         }
     }
-
-    /*public static void insert(String name, String capacity) {
-        String sql = "INSERT INTO warehouses(name,capacity) VALUES(?,?)";
-
-        try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, name);
-            pstmt.setString(2, capacity);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }*/
 }

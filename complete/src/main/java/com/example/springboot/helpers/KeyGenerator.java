@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class KeyGenerator {
 
-    public ArrayList<String> generateKeys(int deviceId, String path) throws GeneralSecurityException, IOException {
+    public static ArrayList<String> generateKeys(int deviceId, String path) throws GeneralSecurityException, IOException {
 
         ArrayList<String> keyPaths = new ArrayList<String>();
 

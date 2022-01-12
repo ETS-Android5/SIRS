@@ -1,9 +1,11 @@
 package com.example.springboot;
 
 import com.example.springboot.helpers.DBHelper;
+import com.example.springboot.helpers.KeyGenerator;
+import com.example.springboot.user.User;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 
@@ -12,16 +14,12 @@ import java.sql.SQLException;
 public class Application {
 
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
-		System.out.println("no main");
+
 		DBHelper.SQLinit();
-		System.out.println("no main1");
 		//DBHelper.createMobileTable();
-		System.out.println("no main2");
 		SpringApplication.run(Application.class, args);
+		//DBHelper.insertUser(1, "user1", "pass1");
 
 	}
-
-
-
 
 }

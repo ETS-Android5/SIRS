@@ -16,8 +16,9 @@ public class MobileAppService {
     private int deviceId = 0;
 
     public String RegisterMobile() throws GeneralSecurityException, IOException, SQLException {
-        //create a deviceId
-        //is received a public (and private key?) or generated
+        //create an user, generate a secret key and save the key, the password and
+
+
 
         MobileApp mobile = new MobileApp(deviceId++);
         //mobileList.put(deviceId, mobile);

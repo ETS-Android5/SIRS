@@ -4,7 +4,6 @@ com/example/springboot/mobile/MobileAppService.class
 com/example/springboot/Application.class
 com/example/springboot/mobile/MobileApp.class
 com/example/springboot/helpers/KeyGenerator.class
-com/example/springboot/mobile/MobileAppController.class
 com/example/springboot/helpers/DBHelper.class
-com/example/springboot/desktop/DesktopAppController.class
+com/example/springboot/ApplicationController.class
 com/example/springboot/desktop/DesktopApp.class
