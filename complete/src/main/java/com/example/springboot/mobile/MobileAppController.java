@@ -1,4 +1,5 @@
 package com.example.springboot.mobile;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ public class MobileAppController {
 
     @RequestMapping(value="/Login")
     public String Register() throws GeneralSecurityException, IOException {
+        System.out.println("entrei");
         return mobileAppService.RegisterMobile();
     }
 }

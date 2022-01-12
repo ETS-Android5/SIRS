@@ -12,7 +12,7 @@ public class KeyGenerator {
 
         ArrayList<String> keyPaths = new ArrayList<String>();
 
-        File file = new File("");
+        /*File file = new File("");
         String directoryName = file.getAbsoluteFile().toString() + path;
 
         String publicKey = directoryName + "/publicKey" + deviceId + ".pub";
@@ -42,7 +42,7 @@ public class KeyGenerator {
         pubFos.close();
 
         keyPaths.add(publicKey);
-        keyPaths.add(privateKey);
+        keyPaths.add(privateKey);*/
 
         return keyPaths;
     }

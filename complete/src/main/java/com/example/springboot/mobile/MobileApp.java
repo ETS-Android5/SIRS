@@ -17,12 +17,12 @@ public class MobileApp {
     public MobileApp(int id) throws GeneralSecurityException, IOException {
 
         deviceId = id;
-        String path = "/complete/src/main/java/com/example/springboot/mobile/keys";
+        /*String path = "/complete/src/main/java/com/example/springboot/mobile/keys";
 
         ArrayList<String> keys = keyGenerator.generateKeys(deviceId, path);
 
         publicKey = keys.get(0);
-        privateKey = keys.get(1);
+        privateKey = keys.get(1);*/
     }
 
 
