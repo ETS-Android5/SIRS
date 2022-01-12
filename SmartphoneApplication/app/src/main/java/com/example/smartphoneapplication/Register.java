@@ -31,7 +31,7 @@ public class Register extends AppCompatActivity {
     TextView textViewCodeGenerator;
 
     public void sendMessage(View view) {
-        final String uri = "http://completar";
+        final String uri = "http://10.0.2.2:8080/Login";
         new RESTTask().execute(uri);
     }
 
@@ -77,6 +77,7 @@ public class Register extends AppCompatActivity {
 
         protected ResponseEntity<User> doInBackground(String... uri) {
             try {
+                Log.d("ENTREI", "entrei 1");
                 final String url = uri[0];
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
@@ -100,6 +101,7 @@ public class Register extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(ResponseEntity<User> result) {
+            Log.d("ENTREI2", "entrei 2");
             HttpStatus statusCode = result.getStatusCode();
             User userReturned = result.getBody();
         }

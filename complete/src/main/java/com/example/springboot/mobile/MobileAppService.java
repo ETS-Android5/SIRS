@@ -2,6 +2,7 @@ package com.example.springboot.mobile;
 
 import org.springframework.stereotype.Service;
 
+import javax.lang.model.element.NestingKind;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.Key;
@@ -58,6 +59,6 @@ public class MobileAppService {
         }
 
 
-        return "olá!";
+        return "olá";
     }
 }

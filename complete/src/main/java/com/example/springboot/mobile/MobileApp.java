@@ -23,7 +23,6 @@ public class MobileApp {
 
         publicKey = keys.get(0);
         secretKey = keys.get(1);
-
     }
 
 

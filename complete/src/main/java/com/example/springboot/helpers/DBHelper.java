@@ -23,6 +23,10 @@ public class DBHelper {
             statement.executeUpdate("drop table if exists user");
             statement.executeUpdate("create table user (id integer, username string, password string, keyPath string)");
 
+            //create worker table
+            statement.executeUpdate("drop table if exists worker");
+            statement.executeUpdate("create table worker (id integer, username string, password string, keyPath string)");
+
 
         }
         catch(SQLException e)
@@ -46,7 +50,7 @@ public class DBHelper {
         }
     }
 
-    public static void insertUser(int id, String username, String password, String keyPath) throws ClassNotFoundException, SQLException {
+    public static void insertUser(int id, String username, String password, String keyPath) throws  SQLException {
         Connection connection = null;
         connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
@@ -59,21 +63,9 @@ public class DBHelper {
             pstmt.setString(4, keyPath);
             pstmt.executeUpdate();
 
-            /*Statement statement = connection.createStatement();
-
-            ResultSet rs = statement.executeQuery("select * from mobileDevice");
-            while(rs.next())
-            {
-                System.out.println("no while");
-                // read the result set
-                System.out.println("id = " + rs.getInt("id"));
-                System.out.println("username = " + rs.getString("username"));
-                System.out.println("password = " + rs.getString("password"));
-            }*/
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
         finally
         {
             try
@@ -88,4 +80,50 @@ public class DBHelper {
             }
         }
     }
+
+    public static void insertWorker(int id, String username, String password, String keyPath) throws  SQLException {
+        Connection connection = null;
+        connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
+
+        String sql = "INSERT INTO user(id,username, password) VALUES(?,?,?)";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.setString(2, username);
+            pstmt.setString(3, password);
+            pstmt.setString(4, keyPath);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+                if(connection != null)
+                    connection.close();
+            }
+            catch(SQLException e)
+            {
+                // connection close failed.
+                System.err.println(e);
+            }
+        }
+    }
+
+
 }
+
+
+/*Statement statement = connection.createStatement();
+
+            ResultSet rs = statement.executeQuery("select * from mobileDevice");
+            while(rs.next())
+            {
+                System.out.println("no while");
+                // read the result set
+                System.out.println("id = " + rs.getInt("id"));
+                System.out.println("username = " + rs.getString("username"));
+                System.out.println("password = " + rs.getString("password"));
+            }*/

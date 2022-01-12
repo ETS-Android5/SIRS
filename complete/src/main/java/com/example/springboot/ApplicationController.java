@@ -19,8 +19,20 @@ public class ApplicationController {
     @Autowired
     private ApplicationService AppService;
 
+    @PostMapping(value="/RegisterMobile")
+    public String RegisterMobile(@RequestBody User userRegistration) throws SQLException, ClassNotFoundException {
+        //return value is code to insert in
+        return AppService.RegisterMobile(userRegistration);
+    }
+
     @PostMapping(value="/RegisterUser")
-    public String Register(@RequestBody User userRegistration) throws GeneralSecurityException, IOException, SQLException, ClassNotFoundException {
+    public String RegisterUser(@RequestBody User userRegistration) throws SQLException, ClassNotFoundException {
+        //return value is code to insert in
         return AppService.RegisterUser(userRegistration);
+    }
+
+    @PostMapping(value="/RegisterWorker")
+    public String RegisterWorker(@RequestBody User userRegistration) throws SQLException, ClassNotFoundException {
+        return AppService.RegisterWorker(userRegistration);
     }
 }

@@ -6,4 +6,5 @@ com/example/springboot/mobile/MobileApp.class
 com/example/springboot/helpers/KeyGenerator.class
 com/example/springboot/helpers/DBHelper.class
 com/example/springboot/ApplicationController.class
+com/example/springboot/ApplicationService.class
 com/example/springboot/desktop/DesktopApp.class
