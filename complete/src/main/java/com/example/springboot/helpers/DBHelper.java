@@ -1,10 +1,6 @@
 package com.example.springboot.helpers;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class DBHelper {
 
@@ -55,4 +51,37 @@ public class DBHelper {
             }
         }
     }
+
+    /*public static void createNewTable() {
+        // SQLite connection string
+        String url = "jdbc:sqlite:C://sqlite/db/tests.db";
+
+        // SQL statement for creating a new table
+        String sql = "CREATE TABLE IF NOT EXISTS warehouses (\n"
+                + "	id integer PRIMARY KEY,\n"
+                + "	name text NOT NULL,\n"
+                + "	capacity real\n"
+                + ");";
+
+        try (Connection conn = DriverManager.getConnection(url);
+             Statement stmt = conn.createStatement()) {
+            // create a new table
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /*public static void insert(String name, String capacity) {
+        String sql = "INSERT INTO warehouses(name,capacity) VALUES(?,?)";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, name);
+            pstmt.setString(2, capacity);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }*/
 }

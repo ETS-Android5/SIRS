@@ -23,6 +23,7 @@ public class DesktopApp {
 
         publicKey = keys.get(0);
         privateKey = keys.get(1);
+
     }
 
 
