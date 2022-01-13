@@ -6,11 +6,15 @@ import com.example.springboot.user.User;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 @Service
 public class ApplicationService {
 
-    public String RegisterUser(User user) throws SQLException, ClassNotFoundException {
+    Dictionary codeList = new Hashtable();
+
+    public String RegisterUser(User user, String code) throws SQLException, ClassNotFoundException {
         //create a userId
         //it is generated a secret key
 
@@ -34,8 +38,9 @@ public class ApplicationService {
         return "olá!";
     }
 
-    public String RegisterMobile(User user) throws SQLException, ClassNotFoundException {
+    public String RegisterMobile(String code) throws SQLException, ClassNotFoundException {
         //code is generated in the frontend
+
         return "olá!";
     }
 }
