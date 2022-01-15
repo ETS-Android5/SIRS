@@ -1,30 +1,62 @@
 package com.example.springboot;
 
 import com.example.springboot.helpers.DBHelper;
-import com.example.springboot.helpers.KeyGenerator;
 import com.example.springboot.user.User;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.sql.SQLException;
-import java.util.Dictionary;
-import java.util.Hashtable;
+import java.util.ArrayList;
+
+import static com.example.springboot.helpers.KeyGenerator.prepareDHAlgorithm;
 
 @Service
 public class ApplicationService {
 
-    Dictionary codeList = new Hashtable();
+    public ResponseEntity<ArrayList<Integer>> RegisterMobile(int mobile, String code) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+        //code is generated in the frontend
+        ArrayList<Integer> keys = new ArrayList<Integer>();
 
-    public String RegisterUser(User user, String code) throws SQLException, ClassNotFoundException {
-        //create a userId
-        //it is generated a secret key
+        if (DBHelper.insertRegistrationCode(mobile, code).getStatusCode() == HttpStatus.OK) {
+            try {
+            keys.addAll(prepareDHAlgorithm());
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (NoSuchProviderException e) {
+                e.printStackTrace();
+            }
+            return new ResponseEntity<>(keys, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(keys, HttpStatus.BAD_REQUEST);
+    }
 
-        //
+    public ResponseEntity<String> RegisterUser(User user, String code) throws SQLException, ClassNotFoundException {
+        //Check if this user is already sign
+        ResponseEntity<String> response = DBHelper.confirmCode(user.getMobile());
+        if (response.getStatusCode() == HttpStatus.BAD_REQUEST) {
+            return response;
+        }
 
-        String generatedKey ="";// = KeyGenerator.generateKeys();
+        //Starts the DH algorithm
+        try {
+            prepareDHAlgorithm();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        }
 
-        DBHelper.insertUser(user.getId(), user.getUsername(), user.getPassword(), generatedKey);
+        //insert user no fim do algoritmo
+        //DBHelper.insertUser(user.getMobile(), user.getUsername(), user.getPassword(), generatedKey);
 
-        return "olá!";
+        return response;
+    }
+
+    public ResponseEntity<String> SuccessRegisterMobile(int mobile, int key) throws SQLException, ClassNotFoundException {
+        return DBHelper.SuccessRegisterMobile(mobile, key);
     }
 
     public String RegisterWorker(User user) throws SQLException, ClassNotFoundException {
@@ -33,13 +65,7 @@ public class ApplicationService {
 
         String generatedKey ="";// = KeyGenerator.generateKeys();
 
-        DBHelper.insertWorker(user.getId(), user.getUsername(), user.getPassword(), generatedKey);
-
-        return "olá!";
-    }
-
-    public String RegisterMobile(String code) throws SQLException, ClassNotFoundException {
-        //code is generated in the frontend
+        DBHelper.insertWorker(user.getMobile(), user.getUsername(), user.getPassword(), generatedKey);
 
         return "olá!";
     }

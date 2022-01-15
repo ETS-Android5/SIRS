@@ -1,5 +1,8 @@
 package com.example.springboot.helpers;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import java.sql.*;
 
 public class DBHelper {
@@ -26,6 +29,14 @@ public class DBHelper {
             //create worker table
             statement.executeUpdate("drop table if exists worker");
             statement.executeUpdate("create table worker (id integer, username string, password string, keyPath string)");
+
+            //create registration table
+            statement.executeUpdate("drop table if exists registration");
+            statement.executeUpdate("create table registration (mobile integer, code string)");
+
+            //create keys table
+            statement.executeUpdate("drop table if exists keys");
+            statement.executeUpdate("create table keys (mobile integer, key integer)");
 
 
         }
@@ -112,7 +123,110 @@ public class DBHelper {
         }
     }
 
+    public static ResponseEntity<String> confirmCode(int mobile) throws  SQLException {
+        Connection connection = null;
+        connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
+        String sql = "SELECT code FROM registration WHERE mobile = ?";
+        ResultSet rs = null;
+        String message = "";
+        HttpStatus httpStatus = null;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, mobile);
+            rs = pstmt.executeQuery(sql);
+            message = "Already associated to an account";
+            httpStatus = HttpStatus.OK;
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        try
+        {
+            if(connection != null)
+                connection.close();
+        }
+        catch(SQLException e)
+        {
+            // connection close failed.
+            System.err.println(e);
+        }
+        return new ResponseEntity<String>(message, httpStatus);
+    }
+
+    public static ResponseEntity<String> insertRegistrationCode(int mobile, String code) throws  SQLException {
+        Connection connection = null;
+        connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
+
+        String sqlConfirm = "SELECT mobile FROM registration WHERE mobile = ?";
+        ResultSet rs = null;
+        String message = "";
+        HttpStatus httpStatus = null;
+
+        if (confirmCode(mobile).toString() == "Already associated to an account") {
+            message = "Already associated to an account";
+            httpStatus = HttpStatus.BAD_REQUEST;
+        }
+        else {
+            String sql = "INSERT INTO registration(mobile, code) VALUES(?,?)";
+
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setInt(1, mobile);
+                pstmt.setString(2, code);
+                pstmt.executeUpdate();
+                message = "Mobile associated with success";
+                httpStatus = HttpStatus.OK;
+
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        try {
+            if (connection != null)
+                connection.close();
+        } catch (SQLException e) {
+            // connection close failed.
+            System.err.println(e);
+        }
+        return new ResponseEntity<String>(message, httpStatus);
+    }
+
+    public static ResponseEntity<String> SuccessRegisterMobile(int key, int mobile) throws  SQLException {
+        Connection connection = null;
+        connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
+
+        String sqlConfirm = "SELECT mobile FROM registration WHERE mobile = ?";
+        ResultSet rs = null;
+        String message = "";
+        HttpStatus httpStatus = null;
+
+        if (confirmCode(mobile).toString() == "Mobile not associated to an account") {
+            message = "Mobile not associated to an account";
+            httpStatus = HttpStatus.BAD_REQUEST;
+        }
+        else {
+            String sql = "INSERT INTO keys(mobile, key) VALUES(?,?)";
+
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setInt(1, mobile);
+                pstmt.setInt(2, key);
+                pstmt.executeUpdate();
+                message = "Saved key with success";
+                httpStatus = HttpStatus.OK;
+
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        try {
+            if (connection != null)
+                connection.close();
+        } catch (SQLException e) {
+            // connection close failed.
+            System.err.println(e);
+        }
+        return new ResponseEntity<String>(message, httpStatus);
+    }
 }
 
 

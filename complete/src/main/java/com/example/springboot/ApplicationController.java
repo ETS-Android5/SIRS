@@ -2,11 +2,15 @@ package com.example.springboot;
 
 import com.example.springboot.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 @RestController
 public class ApplicationController {
@@ -15,19 +19,31 @@ public class ApplicationController {
     private ApplicationService AppService;
 
     @PostMapping(value="/RegisterMobile")
-    public String RegisterMobile(@RequestBody String code) throws SQLException, ClassNotFoundException {
+    public ResponseEntity<ArrayList<Integer>> RegisterMobile(@RequestBody int mobile, @RequestBody String code) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         //return value is code to insert in
-        return AppService.RegisterMobile(code);
+        return AppService.RegisterMobile(mobile, code);
     }
 
     @PostMapping(value="/RegisterUser")
-    public String RegisterUser(@RequestBody User userRegistration, String code) throws SQLException, ClassNotFoundException {
+    public ResponseEntity<String> RegisterUser(@RequestBody User userRegistration, String code) throws SQLException, ClassNotFoundException {
         //return value is code to insert in
         return AppService.RegisterUser(userRegistration, code);
     }
 
-    @PostMapping(value="/RegisterWorker")
-    public String RegisterWorker(@RequestBody User userRegistration) throws SQLException, ClassNotFoundException {
-        return AppService.RegisterWorker(userRegistration);
+
+    @PostMapping(value="/SuccessRegisterMobile")
+    public ResponseEntity<String> SuccessRegisterMobile(@RequestBody int mobile, int key) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+        //return value is code to insert in
+        return AppService.SuccessRegisterMobile(mobile, key);
     }
+/*
+    public ResponseEntity<ArrayList<Integer>> LoginMobile(@RequestBody int mobile, @RequestBody String code) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+        //return value is code to insert in
+        return AppService.RegisterMobile(mobile, code);
+    }*/
+
+    /*@PostMapping(value="/RegisterWorker")
+    public String RegisterWorker(@RequestBody User userRegistration, @RequestBody String code ) throws SQLException, ClassNotFoundException {
+        return AppService.RegisterWorker(userRegistration, code);
+    }*/
 }
