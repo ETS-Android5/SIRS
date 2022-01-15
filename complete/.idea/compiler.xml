@@ -9,7 +9,7 @@
         <module name="spring-boot" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8">
       <module name="complete" target="1.8" />
       <module name="spring-boot-complete" target="1.8" />
     </bytecodeTargetLevel>
