@@ -24,11 +24,11 @@ public class DBHelper {
 
             //create user table
             statement.executeUpdate("drop table if exists user");
-            statement.executeUpdate("create table user (id integer, username string, password string, keyPath string)");
+            statement.executeUpdate("create table user (username string, password string, sharedSecret string)");
 
             //create worker table
             statement.executeUpdate("drop table if exists worker");
-            statement.executeUpdate("create table worker (id integer, username string, password string, keyPath string)");
+            statement.executeUpdate("create table worker (username string, password string, sharedSecret string)");
 
             //create registration table
             statement.executeUpdate("drop table if exists registration");
@@ -61,17 +61,16 @@ public class DBHelper {
         }
     }
 
-    public static void insertUser(int id, String username, String password, String keyPath) throws  SQLException {
+    public static void insertUser(String username, String password, String code) throws  SQLException {
         Connection connection = null;
         connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
-        String sql = "INSERT INTO user(id,username, password) VALUES(?,?,?)";
+        String sql = "INSERT INTO user(username, password, code) VALUES(?,?,?)";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
-            pstmt.setString(2, username);
-            pstmt.setString(3, password);
-            pstmt.setString(4, keyPath);
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            pstmt.setString(3, code);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -123,17 +122,17 @@ public class DBHelper {
         }
     }
 
-    public static ResponseEntity<String> confirmCode(int mobile) throws  SQLException {
+    public static ResponseEntity<String> confirmCode(String code) throws  SQLException {
         Connection connection = null;
         connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
-        String sql = "SELECT code FROM registration WHERE mobile = ?";
+        String sql = "SELECT code FROM registration WHERE code = ?";
         ResultSet rs = null;
         String message = "";
         HttpStatus httpStatus = null;
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, mobile);
+            pstmt.setString(1, code);
             rs = pstmt.executeQuery(sql);
             message = "Already associated to an account";
             httpStatus = HttpStatus.OK;
@@ -154,7 +153,7 @@ public class DBHelper {
         return new ResponseEntity<String>(message, httpStatus);
     }
 
-    public static ResponseEntity<String> insertRegistrationCode(int mobile, String code) throws  SQLException {
+    public static ResponseEntity<String> insertRegistrationCode(String code) throws  SQLException {
         Connection connection = null;
         connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 

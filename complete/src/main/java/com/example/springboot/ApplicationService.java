@@ -16,11 +16,11 @@ import static com.example.springboot.helpers.KeyGenerator.prepareDHAlgorithm;
 @Service
 public class ApplicationService {
 
-    public ResponseEntity<ArrayList<Integer>> RegisterMobile(int mobile, String code) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+    public ResponseEntity<ArrayList<Integer>> RegisterMobile(String code, String sharedSecret) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         //code is generated in the frontend
         ArrayList<Integer> keys = new ArrayList<Integer>();
 
-        if (DBHelper.insertRegistrationCode(mobile, code).getStatusCode() == HttpStatus.OK) {
+        if (DBHelper.insertRegistrationCode(code).getStatusCode() == HttpStatus.OK) {
             try {
             keys.addAll(prepareDHAlgorithm());
             } catch (NoSuchAlgorithmException e) {
@@ -35,7 +35,7 @@ public class ApplicationService {
 
     public ResponseEntity<String> RegisterUser(User user, String code) throws SQLException, ClassNotFoundException {
         //Check if this user is already sign
-        ResponseEntity<String> response = DBHelper.confirmCode(user.getMobile());
+        ResponseEntity<String> response = DBHelper.confirmCode(code);
         if (response.getStatusCode() == HttpStatus.BAD_REQUEST) {
             return response;
         }
@@ -65,8 +65,17 @@ public class ApplicationService {
 
         String generatedKey ="";// = KeyGenerator.generateKeys();
 
-        DBHelper.insertWorker(user.getMobile(), user.getUsername(), user.getPassword(), generatedKey);
+        DBHelper.insertWorker(user.getUsername(), user.getPassword(), generatedKey);
 
         return "olá!";
     }
+
+    public void LoginMobile(int mobile, String code) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+        //code is generated in the frontend
+
+        if (DBHelper.insertRegistrationCode(code, ).getStatusCode() == HttpStatus.OK) {
+
+        }
+    }
+
 }
