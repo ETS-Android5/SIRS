@@ -21,7 +21,7 @@ public class ApplicationController {
     private ApplicationService AppService;
 
     @PostMapping(value="/RegisterMobile")
-    public ResponseEntity<ArrayList<Integer>> RegisterMobile(@RequestBody String code, @RequestBody String sharedSecret) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+    public ResponseEntity<String> RegisterMobile(@RequestBody String code, @RequestBody String sharedSecret) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         //return value is code to insert in
         return AppService.RegisterMobile(code, sharedSecret);
     }
@@ -30,13 +30,6 @@ public class ApplicationController {
     public ResponseEntity<String> RegisterUser(@RequestBody User userRegistration, String code) throws SQLException, ClassNotFoundException {
         //return value is code to insert in
         return AppService.RegisterUser(userRegistration, code);
-    }
-
-
-    @PostMapping(value="/SuccessRegisterMobile")
-    public ResponseEntity<String> SuccessRegisterMobile(@RequestBody int mobile, int key) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
-        //return value is code to insert in
-        return AppService.SuccessRegisterMobile(mobile, key);
     }
 
     public void LoginMobile(@RequestBody int mobile, @RequestBody String code) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
