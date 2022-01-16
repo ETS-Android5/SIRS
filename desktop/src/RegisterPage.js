@@ -11,6 +11,9 @@ export default class RegisterPage extends Component{
         let user = new User(name, pass);
         DataService.sendRegistration(user, code).then(r => {
             console.log( r.status )
+            if ( r.status == "OK"){
+                window.location.href = '/login'
+            }
         })
     }
 
