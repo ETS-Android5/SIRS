@@ -22,7 +22,7 @@ import java.sql.SQLException;
 @SpringBootApplication
 //@ComponentScan(basePackageClasses = ApplicationController.class)
 // @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
-public class Application {
+public class   Application {
 
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
 		DBHelper.SQLinit();
