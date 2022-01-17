@@ -6,6 +6,7 @@ const INSTRUCTOR_API_URL = `${COURSE_API_URL}/RegisterUser`
 class DataService {
 
     sendRegistration( user , code ){
+        console.log("a enviar");
         return axios.post(`${INSTRUCTOR_API_URL}`, {var1: user , var2: code });
     }
 
