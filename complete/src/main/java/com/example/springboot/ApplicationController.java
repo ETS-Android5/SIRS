@@ -13,8 +13,8 @@ import java.security.NoSuchProviderException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+@CrossOrigin(origins = { "https://localhost:3000/" })
 @RestController
-@CrossOrigin(origins = { "http://localhost:3000/", "http://localhost:4200/" })
 public class ApplicationController {
 
     @Autowired
@@ -23,6 +23,7 @@ public class ApplicationController {
     @PostMapping(value="/RegisterMobile")
     public ResponseEntity<String> RegisterMobile(@RequestBody String code, @RequestBody String sharedSecret) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         //return value is code to insert in
+        System.out.println("no register");
         return AppService.RegisterMobile(code, sharedSecret);
     }
 
