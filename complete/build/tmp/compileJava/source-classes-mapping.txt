@@ -1,9 +1,7 @@
 com/example/springboot/user/User.java
  com.example.springboot.user.User
-com/example/springboot/Application.java
- com.example.springboot.Application
- com.example.springboot.Application$ServerConfig
- com.example.springboot.Application$ServerConfig$1
+com/example/springboot/helpers/KeyGenerator.java
+ com.example.springboot.helpers.KeyGenerator
 com/example/springboot/desktop/DesktopApp.java
  com.example.springboot.desktop.DesktopApp
 com/example/springboot/mobile/MobileApp.java
@@ -12,7 +10,9 @@ com/example/springboot/helpers/DBHelper.java
  com.example.springboot.helpers.DBHelper
 com/example/springboot/ApplicationService.java
  com.example.springboot.ApplicationService
-com/example/springboot/helpers/KeyGenerator.java
- com.example.springboot.helpers.KeyGenerator
+com/example/springboot/Application.java
+ com.example.springboot.Application
+ com.example.springboot.Application$ServerConfig
+ com.example.springboot.Application$ServerConfig$1
 com/example/springboot/ApplicationController.java
  com.example.springboot.ApplicationController
