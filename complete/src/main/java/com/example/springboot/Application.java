@@ -32,7 +32,7 @@ public class Application {
 
 	}
 
-	@Configuration
+	/*@Configuration
 	public class ServerConfig {
 
 		@Bean
@@ -61,7 +61,7 @@ public class Application {
 			return connector;
 		}
 
-	}
+	}*/
 
 
 
