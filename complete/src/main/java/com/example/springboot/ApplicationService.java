@@ -25,8 +25,9 @@ public class ApplicationService {
         return DBHelper.insertUser(user.getUsername(), user.getPassword(), code);
     }
 
-    public ResponseEntity<String> LoginMobile(User user, String passcode) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
-        return DBHelper.Login(user.getUsername(), passcode);
+    public ResponseEntity<String> LoginMobile(String username, String passcode) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+        //TOPT converter passcode no shared secret
+        return DBHelper.Login(username, passcode);
     }
 
      /*public String RegisterWorker(User user) throws SQLException, ClassNotFoundException {
