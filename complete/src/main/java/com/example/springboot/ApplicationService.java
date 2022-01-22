@@ -2,16 +2,12 @@ package com.example.springboot;
 
 import com.example.springboot.helpers.DBHelper;
 import com.example.springboot.user.User;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-
-import static com.example.springboot.helpers.KeyGenerator.prepareDHAlgorithm;
 
 @Service
 public class ApplicationService {

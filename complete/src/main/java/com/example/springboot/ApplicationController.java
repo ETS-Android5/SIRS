@@ -40,11 +40,11 @@ public class ApplicationController {
         //return value is code to insert in
         return AppService.RegisterUser(userRegistration, code);
     }
-
+/*
     public ResponseEntity<ArrayList<Integer>> LoginMobile(@RequestBody String username, @RequestBody String passcode) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         //return value is code to insert in
         return AppService.LoginMobile(username, passcode);
-    }
+    }*/
 
     /*@PostMapping(value="/SuccessRegisterMobile")
     public ResponseEntity<String> SuccessRegisterMobile(@RequestBody int mobile, int key) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {

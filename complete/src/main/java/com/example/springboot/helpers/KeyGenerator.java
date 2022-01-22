@@ -7,13 +7,23 @@ import java.util.ArrayList;
 public class KeyGenerator {
 
 
-    public static ArrayList<Integer> prepareDHAlgorithm() throws NoSuchAlgorithmException, NoSuchProviderException {
+    public static ArrayList<String> generateCodes() throws NoSuchAlgorithmException, NoSuchProviderException {
 
-        ArrayList<Integer> keys = new ArrayList<Integer>();
+        ArrayList<String> keys = new ArrayList<String>();
         SecureRandom secureRandomGenerator = null;
 
         try {
+
+            String chrs = "0123456789abcdefghijklmnopqrstuvwxyz-_ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            SecureRandom secureRandom = SecureRandom.getInstanceStrong();
+            // 9 is the length of the string you want
+            String sharedSecret = secureRandom.ints(20, 0, chrs.length()).mapToObj(i -> chrs.charAt(i))
+                    .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
+
+            //Get random integer in range
+            //alpha and q are public
             secureRandomGenerator = SecureRandom.getInstance("SHA1PRNG", "SUN");
+            int code = secureRandomGenerator.nextInt(999999);
 
             /*// Get 128 random bytes
             byte[] randomBytes = new byte[128];
@@ -22,12 +32,8 @@ public class KeyGenerator {
             //Get random integer
             int r = secureRandomGenerator.nextInt();*/
 
-            //Get random integer in range
-            //alpha and q are public
-            int alpha = secureRandomGenerator.nextInt(999999);
-            int q = secureRandomGenerator.nextInt(999999);
-
-            keys.add(alpha, q);
+            keys.add(sharedSecret);
+            keys.add(Integer.toString(code));
 
             return keys;
 
