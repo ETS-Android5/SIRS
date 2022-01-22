@@ -1,16 +1,16 @@
 import axios from 'axios'
 
-const COURSE_API_URL = 'http://127.0.0.1:8443'
+const COURSE_API_URL = 'https://127.0.0.1:8442'
 const INSTRUCTOR_API_URL = `${COURSE_API_URL}/RegisterUser`
 
 class DataService {
 
     async sendRegistration(user, pass ,code) {
-        let auxi;
-        auxi = await axios.post(`${INSTRUCTOR_API_URL}`, {var1: user, var2: pass , var3: code});
+        let aux;
+        aux = await axios.post(`${INSTRUCTOR_API_URL}`, {var1: user, var2: pass , var3: code});
         console.log("____________");
-        console.log(auxi);
-        return auxi ;
+        console.log(aux);
+        return aux ;
     }
 
     retrieveAllCourses(name) {
