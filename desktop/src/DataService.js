@@ -1,32 +1,16 @@
 import axios from 'axios'
 
-const COURSE_API_URL = 'http://localhost:8080'
+const COURSE_API_URL = 'http://127.0.0.1:8443'
 const INSTRUCTOR_API_URL = `${COURSE_API_URL}/RegisterUser`
 
 class DataService {
 
-    sendRegistration( user , code ){
-        /*
-        let options = {
-            url: `https://localhost:8080`,  // <---this is  a fake ip do not bother
-            method: "POST",
-            httpsAgent :  new https.Agent({
-                cert: fs.readFileSync('client.crt'),
-                key: fs.readFileSync('client.key'),
-                ca: fs.readFileSync('ca.crt'),
-            }),
-            headers: {
-            },
-            data: { var1: user , var2:code }
-        };
-        return axios(options);*/
-
-        //return axios.post(`${INSTRUCTOR_API_URL}` , {  var1: user , var2:code });
-
-        var aux= axios.post(`${INSTRUCTOR_API_URL}` , {  var1: user , var2:code });
+    async sendRegistration(user, pass ,code) {
+        let auxi;
+        auxi = await axios.post(`${INSTRUCTOR_API_URL}`, {var1: user, var2: pass , var3: code});
         console.log("____________");
-        console.log(aux);
-        return aux;
+        console.log(auxi);
+        return auxi ;
     }
 
     retrieveAllCourses(name) {

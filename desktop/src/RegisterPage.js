@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import DataService from "./DataService";
-import User from "./User";
 
 export default class RegisterPage extends Component{
 
@@ -8,10 +7,9 @@ export default class RegisterPage extends Component{
         let name = document.getElementById("USERNAME").value;
         let pass = document.getElementById("PASSWORD").value;
         let code = document.getElementById("CODE").value;
-        let user = new User(name, pass);
-        DataService.sendRegistration(user, code).then(r => {
+        DataService.sendRegistration(name, pass ,code).then(r => {
             console.log( r.status )
-            if ( r.status == "OK"){
+            if ( r.status === "OK"){
                 window.location.href = '/login'
             }
         })
