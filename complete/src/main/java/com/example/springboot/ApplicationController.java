@@ -6,6 +6,7 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,7 @@ import java.util.Map;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.StringEntity;
 
+@CrossOrigin( origins = {  "http://127.0.0.1:3000", "http://localhost:3000" })
 @RestController
 public class ApplicationController {
 
@@ -39,21 +41,26 @@ public class ApplicationController {
     }
 
     @PostMapping(value="/RegisterUser")
-    public ResponseEntity<String> RegisterUser(@RequestBody User userRegistration, String code) throws SQLException, ClassNotFoundException {
+    public ResponseEntity<String> RegisterUser(@RequestBody Map<String , Object> payload) throws SQLException, ClassNotFoundException {
         //return value is code to insert in
+        String username = payload.get("var1").toString() ;
+        String password = payload.get("var2").toString() ;
+        String code = payload.get("var3").toString() ;
+
+        User userRegistration = new User( username  , password );
+
         return AppService.RegisterUser(userRegistration, code);
     }
-
+/*
+    public ResponseEntity<ArrayList<Integer>> LoginMobile(@RequestBody String username, @RequestBody String passcode) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+        //return value is code to insert in
+        return AppService.LoginMobile(username, passcode);
+    }*/
 
     /*@PostMapping(value="/SuccessRegisterMobile")
     public ResponseEntity<String> SuccessRegisterMobile(@RequestBody int mobile, int key) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         //return value is code to insert in
         return AppService.SuccessRegisterMobile(mobile, key);
-    }*/
-/*
-    public ResponseEntity<ArrayList<Integer>> LoginMobile(@RequestBody int mobile, @RequestBody String code) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
-        //return value is code to insert in
-        return AppService.RegisterMobile(mobile, code);
     }*/
 
     /*@PostMapping(value="/RegisterWorker")

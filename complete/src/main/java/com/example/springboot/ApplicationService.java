@@ -2,16 +2,12 @@ package com.example.springboot;
 
 import com.example.springboot.helpers.DBHelper;
 import com.example.springboot.user.User;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-
-import static com.example.springboot.helpers.KeyGenerator.prepareDHAlgorithm;
 
 @Service
 public class ApplicationService {
@@ -25,8 +21,9 @@ public class ApplicationService {
         return DBHelper.insertUser(user.getUsername(), user.getPassword(), code);
     }
 
-    public ResponseEntity<String> LoginMobile(User user, String passcode) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
-        return DBHelper.Login(user.getUsername(), passcode);
+    public ResponseEntity<String> LoginMobile(String username, String passcode) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+        //TOPT converter passcode no shared secret
+        return DBHelper.Login(username, passcode);
     }
 
      /*public String RegisterWorker(User user) throws SQLException, ClassNotFoundException {

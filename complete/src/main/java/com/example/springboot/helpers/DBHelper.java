@@ -111,26 +111,26 @@ public class DBHelper {
         return new ResponseEntity<String>("Registration concluded", HttpStatus.OK);
     }
 
-    public static ResponseEntity<String> Login(String username, String code) throws  SQLException {
+    public static ResponseEntity<String> Login(String username, String sharedSecret) throws  SQLException {
         /*Connection connection = null;
         connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
         ResultSet rs = null;
         String message = "";
         HttpStatus httpStatus = null;
-
-        if (confirmRegistrationCode(code).toString() == "Already associated to an account") {
+*/
+        /*if (confirmRegistrationCode(code).toString() == "Already associated to an account") {
             message = confirmRegistrationCode(code).toString();
             httpStatus = HttpStatus.BAD_REQUEST;
             return new ResponseEntity<String>(message, httpStatus);
-        }
+        }*/
 
-        String sql = "INSERT INTO user(username, password, code, sharedSecret, loggedIn) VALUES(?,?,? ?)";
+        /*String sql = "INSERT INTO user(loggedIn) VALUES(?) WHERE passcode = ? and username = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            pstmt.setString(2, password);
-            pstmt.setString(3, code);
+            pstmt.setInt(1, 1);
+            pstmt.setString(2, sharedSecret);
+            pstmt.setString(3, username);
 
             String selectSql = "SELECT sharedSecret FROM registration where code = ?";
             try (PreparedStatement selectPstmt = connection.prepareStatement(selectSql)) {
@@ -160,8 +160,10 @@ public class DBHelper {
                 // connection close failed.
                 System.err.println(e);
             }
-        }*/
+        }
+    */
         return new ResponseEntity<String>("Registration concluded", HttpStatus.OK);
+
     }
 
 
