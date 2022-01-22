@@ -13,6 +13,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Map;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.StringEntity;
 
@@ -36,8 +38,14 @@ public class ApplicationController {
     }
 
     @PostMapping(value="/RegisterUser")
-    public ResponseEntity<String> RegisterUser(@RequestBody User userRegistration, String code) throws SQLException, ClassNotFoundException {
+    public ResponseEntity<String> RegisterUser(@RequestBody Map<String , Object> payload) throws SQLException, ClassNotFoundException {
         //return value is code to insert in
+        String username = payload.get("var1").toString() ;
+        String password = payload.get("var2").toString() ;
+        String code = payload.get("var3").toString() ;
+
+        User userRegistration = new User( username  , password );
+
         return AppService.RegisterUser(userRegistration, code);
     }
 /*
