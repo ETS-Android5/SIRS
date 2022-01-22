@@ -2,6 +2,8 @@ package com.example.springboot;
 
 import com.example.springboot.user.Association;
 import com.example.springboot.user.User;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,10 +29,9 @@ public class ApplicationController {
     private ApplicationService AppService;
 
     @PostMapping(value="/test", consumes = "application/json")
-    public HttpEntity RegisterMobile(@RequestBody Association association) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException, UnsupportedEncodingException {
-        System.out.println(association.getRandomCode());
-        HttpEntity response = new StringEntity("olá");
-        return response;
+    public String RegisterMobile(@RequestBody Map<String, Object> body) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException, UnsupportedEncodingException {
+        System.out.println(body.get("randomCode"));
+        return "olá";
     }
 
     @PostMapping(value="/RegisterMobile")
