@@ -3,8 +3,16 @@ import DataService from "./DataService";
 
 export default class LoginPage extends Component{
 
-    login(){
-        console.log( document.getElementById("USERNAME").value  )
+    login( ) {
+        let name = document.getElementById("USERNAME").value;
+
+        let code = document.getElementById("CODE").value;
+        DataService.logIn(name, code).then(r => {
+            console.log( r.status )
+            if ( r.status === "OK"){
+                window.location.href = '/login'
+            }
+        })
     }
     render(){
 
