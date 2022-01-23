@@ -9,7 +9,7 @@ export default class RegisterPage extends Component{
         let code = document.getElementById("CODE").value;
         DataService.sendRegistration(name, pass ,code).then(r => {
             console.log( r.status )
-            if ( r.status === "OK"){
+            if ( r.status === 200 ){
                 window.location.href = '/login'
             }
         })

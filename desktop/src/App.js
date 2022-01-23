@@ -2,6 +2,7 @@ import React from 'react';
 import {BrowserRouter as Router, Link, Route, Routes} from 'react-router-dom'
 import RegisterPage from "./RegisterPage";
 import LoginPage from "./LoginPage";
+import AppPage from "./AppPage";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
               <Route path="/" exact element={<Welcome/> }/>
               <Route path="/register" exact element={<RegisterPage/>}/>
               <Route path="/login" element={<LoginPage/>}/>
+                <Route path="/appMainPage" element={<AppPage/>}/>
             </Routes>
         </>
       </Router>
