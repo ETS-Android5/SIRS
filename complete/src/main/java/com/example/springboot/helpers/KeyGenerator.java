@@ -3,6 +3,7 @@ package com.example.springboot.helpers;
 import java.io.IOException;
 import java.security.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class KeyGenerator {
 
@@ -19,22 +20,19 @@ public class KeyGenerator {
             String sharedSecret = secureRandom.ints(20, 0, chrs.length()).mapToObj(i -> chrs.charAt(i))
                     .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
 
-            //Get random integer in range
-            //alpha and q are public
-            secureRandomGenerator = SecureRandom.getInstance("SHA1PRNG", "SUN");
-            int code = secureRandomGenerator.nextInt(999999);
+            // Get 1024 random bytes
+            byte[] code = new byte[1024];
+            secureRandomGenerator.nextBytes(code);
 
             codes.add(sharedSecret);
-            codes.add(Integer.toString(code));
+            codes.add(Arrays.toString(code));
 
             return codes;
 
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
         }
-        return keys;
+        return codes;
     }
 
 }
