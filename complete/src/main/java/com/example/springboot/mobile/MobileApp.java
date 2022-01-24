@@ -19,7 +19,7 @@ public class MobileApp {
         deviceId = id;
         String path = "/src/main/java/com/example/springboot/mobile/keys";
 
-        ArrayList<String> keys = keyGenerator.generateKeys(deviceId, path);
+        ArrayList<String> keys = keyGenerator.generateCodes();
 
         publicKey = keys.get(0);
         secretKey = keys.get(1);

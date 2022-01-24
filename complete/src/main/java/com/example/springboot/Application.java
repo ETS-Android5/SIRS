@@ -19,8 +19,8 @@ public class Application {
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, NoSuchProviderException, NoSuchAlgorithmException {
 		DBHelper.SQLinit();
 		//DBHelper.createMobileTable();
-		ArrayList<String> codes = generateCodes();
-		System.out.println(codes);
+		//ArrayList<String> codes = generateCodes();
+		//System.out.println(codes);
 		SpringApplication.run(Application.class, args);
 		//DBHelper.insertUser(1, "user1", "pass1");
 	}

@@ -19,7 +19,7 @@ public class DesktopApp {
         deviceId = id;
         String path = "/complete/src/main/java/com/example/springboot/desktop/keys";
 
-        ArrayList<String> keys = keyGenerator.generateKeys(id, path);
+        ArrayList<String> keys = keyGenerator.generateCodes();
 
         publicKey = keys.get(0);
         privateKey = keys.get(1);

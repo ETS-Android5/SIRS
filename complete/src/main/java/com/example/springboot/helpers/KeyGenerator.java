@@ -34,7 +34,7 @@ public class KeyGenerator {
         } catch (NoSuchProviderException e) {
             e.printStackTrace();
         }
-        return keys;
+        return codes;
     }
 
 }
