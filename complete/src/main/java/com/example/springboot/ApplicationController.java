@@ -51,6 +51,15 @@ public class ApplicationController {
 
         return AppService.RegisterUser(userRegistration, code);
     }
+
+    @PostMapping(value="/LogIn")
+    public ResponseEntity<String> UserLogIn(@RequestBody Map<String , Object> payload) throws SQLException, ClassNotFoundException {
+        String username = payload.get("var1").toString() ;
+        String code = payload.get("var2").toString() ;
+
+        User dummy = new User( "fake"  , "fake" );
+        return AppService.RegisterUser(dummy, "pass");
+    }
 /*
     public ResponseEntity<ArrayList<Integer>> LoginMobile(@RequestBody String username, @RequestBody String passcode) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         //return value is code to insert in
