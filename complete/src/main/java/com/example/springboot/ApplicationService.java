@@ -12,7 +12,7 @@ import java.sql.SQLException;
 @Service
 public class ApplicationService {
 
-    public ResponseEntity<String> RegisterMobile(String code, String sharedSecret) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+    public String RegisterMobile(String code, String sharedSecret) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         //code is generated in the frontend
         return DBHelper.insertRegistrationCode(code, sharedSecret);
     }
@@ -21,9 +21,14 @@ public class ApplicationService {
         return DBHelper.insertUser(user.getUsername(), user.getPassword(), code);
     }
 
-    public ResponseEntity<String> LoginMobile(String username, String passcode) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+    public ResponseEntity<String> Login(String username, String passcode) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         //TOPT converter passcode no shared secret
         return DBHelper.Login(username, passcode);
+    }
+
+    public ResponseEntity<String> Logout(String username, String passcode) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+        //TOPT converter passcode no shared secret
+        return DBHelper.Logout(username, passcode);
     }
 
      /*public String RegisterWorker(User user) throws SQLException, ClassNotFoundException {

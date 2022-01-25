@@ -3,9 +3,9 @@ package com.example.springboot.user;
 public class User {
 
     private String username;
-    private String password;
+    private int password;
 
-    public User(String name, String pass) {
+    public User(String name, int pass) {
         this.username = name;
         this.password = pass;
     }
@@ -14,7 +14,7 @@ public class User {
         return this.username;
     }
 
-    public String getPassword() {
+    public int getPassword() {
         return this.password;
     }
 
