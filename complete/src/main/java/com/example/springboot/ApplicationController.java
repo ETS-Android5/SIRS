@@ -1,6 +1,5 @@
 package com.example.springboot;
 
-import com.example.springboot.user.Association;
 import com.example.springboot.user.User;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -29,7 +28,7 @@ public class ApplicationController {
     private ApplicationService AppService;
 
     @PostMapping(value="/test", consumes = "application/json")
-    public String RegisterMobile(@RequestBody Map<String, Object> body) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException, UnsupportedEncodingException {
+    public String Test(@RequestBody Map<String, Object> body) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException, UnsupportedEncodingException {
         System.out.println(body.get("randomCode"));
         return "olá";
     }

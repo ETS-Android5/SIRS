@@ -22,17 +22,25 @@ public class KeyGenerator {
         String chrs = "0123456789abcdefghijklmnopqrstuvwxyz-_ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         SecureRandom secureRandomSharedSecret = SecureRandom.getInstanceStrong();
         // 9 is the length of the string you want B@26a7b76d
-        String SharedSecret = secureRandomSharedSecret.ints(100, 0, chrs.length()).mapToObj(i -> chrs.charAt(i))
+        String sharedSecret = secureRandomSharedSecret.ints(100, 0, chrs.length()).mapToObj(i -> chrs.charAt(i))
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
 
-        codes.add(SharedSecret.getBytes());
+        Base32 secret_base32 = new Base32();
+        byte[] secret = secret_base32.decode(sharedSecret);
+
+        codes.add(secret);
 
         SecureRandom secureRandomPassCode = SecureRandom.getInstanceStrong();
         // 9 is the length of the string you want B@26a7b76d
+
         String passCode = secureRandomPassCode.ints(100, 0, chrs.length()).mapToObj(i -> chrs.charAt(i))
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
 
-        codes.add(passCode.getBytes(Charset.forName("UTF-8")));
+
+        Base32 code_base32 = new Base32();
+        byte[] code = code_base32.decode(passCode);
+
+        codes.add(code);
 
         return codes;
     }
