@@ -13,7 +13,7 @@ public class DBHelper {
         System.out.println("Initializing DB...");
         // load the sqlite-JDBC driver using the current class loader
         Class.forName("org.sqlite.JDBC");
-        // DriverManager.registerDriver(new org.sqlite.JDBC());
+        //DriverManager.registerDriver(new org.sqlite.JDBC());
 
         Connection connection = null;
 

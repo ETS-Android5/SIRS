@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.security.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.apache.commons.codec.binary.Base32;
+import org.apache.commons.codec.binary.Hex;
+import de.taimos.totp.TOTP;
 
 public class KeyGenerator {
 
@@ -34,5 +37,27 @@ public class KeyGenerator {
         }
         return codes;
     }
+
+    /*public static String getTOTPCode(String secretKey) {
+        Base32 base32 = new Base32();
+        byte[] bytes = base32.decode(secretKey);
+        String hexKey = Hex.encodeHexString(bytes);
+        return TOTP.getOTP(hexKey);
+    }
+
+    public static void infinityGeneratingCodes(String sharedSecret) {
+        String lastCode = null;
+        while (true) {
+            String code = getTOTPCode(sharedSecret);
+            if (!code.equals(lastCode)) {
+                System.out.println(code);
+            }
+            lastCode = code;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {};
+        }
+    }*/
+
 
 }

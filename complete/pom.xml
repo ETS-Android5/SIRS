@@ -39,6 +39,18 @@
 		</dependency>
 		<!-- end::actuator[] -->
 
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.11</version>
+		</dependency>
+
+		<dependency>
+			<groupId>de.taimos</groupId>
+			<artifactId>totp</artifactId>
+			<version>1.0</version>
+		</dependency>
+
 		<!-- tag::tests[] -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -56,6 +68,12 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>16.0.1</version>
 		</dependency>
 
 		<!-- end::tests[] -->

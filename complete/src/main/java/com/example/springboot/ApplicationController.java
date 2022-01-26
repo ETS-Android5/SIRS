@@ -35,9 +35,9 @@ public class ApplicationController {
     }
 
     @PostMapping(value="/RegisterMobile")
-    public ResponseEntity<String> RegisterMobile(@RequestBody String mobile, @RequestBody String code) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+    public ResponseEntity<String> RegisterMobile(@RequestBody String code, @RequestBody String sharedSecret) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         //return value is code to insert in
-        return AppService.RegisterMobile(mobile, code);
+        return AppService.RegisterMobile(code,sharedSecret);
     }
 
     @PostMapping(value="/RegisterUser")
