@@ -1,6 +1,5 @@
 package com.example.springboot;
 
-import com.example.springboot.user.Association;
 import com.example.springboot.user.User;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.sql.SQLException;
@@ -29,7 +29,7 @@ public class ApplicationController {
     private ApplicationService AppService;
 
     @PostMapping(value="/test", consumes = "application/json")
-    public String RegisterMobile(@RequestBody Map<String, Object> body) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException, UnsupportedEncodingException {
+    public String RegisterMobileTest(@RequestBody Map<String, Object> body) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException, UnsupportedEncodingException {
         System.out.println(body.get("randomCode"));
         return "olá";
     }
@@ -37,29 +37,38 @@ public class ApplicationController {
     @PostMapping(value="/RegisterMobile", consumes = "application/json")
     public String RegisterMobile(@RequestBody Map<String, Object> body) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         //return value is code to insert in
-        String randomCode = body.get("randomCode").toString();
-        String sharedSecret = body.get("sharedSecret").toString();
+        byte[] randomCode = (byte[]) body.get("randomCode");
+        byte[] sharedSecret = (byte[]) body.get("sharedSecret");
         return AppService.RegisterMobile(randomCode, sharedSecret);
     }
 
     @PostMapping(value="/RegisterUser")
     public ResponseEntity<String> RegisterUser(@RequestBody Map<String , Object> payload) throws SQLException, ClassNotFoundException {
         //return value is code to insert in
-        String username = payload.get("var1").toString() ;
+        String username = payload.get("var1").toString();
         int passwordHash = payload.get("var2").toString().hashCode();
-        String code = payload.get("var3").toString() ;
+        String code = payload.get("var3").toString();
+
+        byte[] byteCode = code.getBytes();
 
         User userRegistration = new User( username  , passwordHash );
 
-        return AppService.RegisterUser(userRegistration, code);
+        return AppService.RegisterUser(userRegistration, byteCode);
     }
 
     @PostMapping(value="/LogIn")
     public ResponseEntity<String> UserLogIn(@RequestBody Map<String , Object> payload) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         String username = payload.get("var1").toString() ;
-        String code = payload.get("var2").toString() ;
+        int code = (int) payload.get("var2");
 
         return AppService.Login(username, code);
+    }
+
+    @PostMapping(value="/LogOut")
+    public ResponseEntity<String> UserLogOut(@RequestBody Map<String , Object> payload) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+        String username = payload.get("var1").toString();
+
+        return AppService.Logout(username);
     }
 /*
     public ResponseEntity<ArrayList<Integer>> LoginMobile(@RequestBody String username, @RequestBody String passcode) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
