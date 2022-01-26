@@ -34,31 +34,32 @@ public class ApplicationController {
         return "olá";
     }
 
-    @PostMapping(value="/RegisterMobile")
-    public ResponseEntity<String> RegisterMobile(@RequestBody String code, @RequestBody String sharedSecret) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+    @PostMapping(value="/RegisterMobile", consumes = "application/json")
+    public String RegisterMobile(@RequestBody Map<String, Object> body) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         //return value is code to insert in
-        return AppService.RegisterMobile(code,sharedSecret);
+        String randomCode = body.get("randomCode").toString();
+        String sharedSecret = body.get("sharedSecret").toString();
+        return AppService.RegisterMobile(randomCode, sharedSecret);
     }
 
     @PostMapping(value="/RegisterUser")
     public ResponseEntity<String> RegisterUser(@RequestBody Map<String , Object> payload) throws SQLException, ClassNotFoundException {
         //return value is code to insert in
         String username = payload.get("var1").toString() ;
-        String password = payload.get("var2").toString() ;
+        int passwordHash = payload.get("var2").toString().hashCode();
         String code = payload.get("var3").toString() ;
 
-        User userRegistration = new User( username  , password );
+        User userRegistration = new User( username  , passwordHash );
 
         return AppService.RegisterUser(userRegistration, code);
     }
 
     @PostMapping(value="/LogIn")
-    public ResponseEntity<String> UserLogIn(@RequestBody Map<String , Object> payload) throws SQLException, ClassNotFoundException {
+    public ResponseEntity<String> UserLogIn(@RequestBody Map<String , Object> payload) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         String username = payload.get("var1").toString() ;
         String code = payload.get("var2").toString() ;
 
-        User dummy = new User( "fake"  , "fake" );
-        return AppService.RegisterUser(dummy, "pass");
+        return AppService.Login(username, code);
     }
 /*
     public ResponseEntity<ArrayList<Integer>> LoginMobile(@RequestBody String username, @RequestBody String passcode) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {

@@ -4,6 +4,7 @@ import com.example.springboot.helpers.DBHelper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.sql.SQLException;
@@ -19,8 +20,7 @@ public class Application {
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, NoSuchProviderException, NoSuchAlgorithmException {
 		DBHelper.SQLinit();
 		//DBHelper.createMobileTable();
-		//ArrayList<String> codes = generateCodes();
-		//System.out.println(codes);
+		ArrayList<byte[]> codes = generateCodes();
 		SpringApplication.run(Application.class, args);
 		//DBHelper.insertUser(1, "user1", "pass1");
 	}

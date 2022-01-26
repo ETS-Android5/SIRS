@@ -1,9 +1,13 @@
 package com.example.springboot.helpers;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Random;
 import org.apache.commons.codec.binary.Base32;
 import org.apache.commons.codec.binary.Hex;
 import de.taimos.totp.TOTP;
@@ -11,30 +15,25 @@ import de.taimos.totp.TOTP;
 public class KeyGenerator {
 
 
-    public static ArrayList<String> generateCodes() throws NoSuchAlgorithmException, NoSuchProviderException {
+    public static ArrayList<byte[]> generateCodes() throws NoSuchAlgorithmException, NoSuchProviderException {
 
-        ArrayList<String> codes = new ArrayList<String>();
-        SecureRandom secureRandomGenerator = null;
+        ArrayList<byte[]> codes = new ArrayList<>();
 
-        try {
-            String chrs = "0123456789abcdefghijklmnopqrstuvwxyz-_ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            SecureRandom secureRandom = SecureRandom.getInstanceStrong();
-            // 9 is the length of the string you want
-            String sharedSecret = secureRandom.ints(20, 0, chrs.length()).mapToObj(i -> chrs.charAt(i))
-                    .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
+        String chrs = "0123456789abcdefghijklmnopqrstuvwxyz-_ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        SecureRandom secureRandomSharedSecret = SecureRandom.getInstanceStrong();
+        // 9 is the length of the string you want B@26a7b76d
+        String SharedSecret = secureRandomSharedSecret.ints(100, 0, chrs.length()).mapToObj(i -> chrs.charAt(i))
+                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
 
-            // Get 1024 random bytes
-            byte[] code = new byte[1024];
-            secureRandomGenerator.nextBytes(code);
+        codes.add(SharedSecret.getBytes());
 
-            codes.add(sharedSecret);
-            codes.add(Arrays.toString(code));
+        SecureRandom secureRandomPassCode = SecureRandom.getInstanceStrong();
+        // 9 is the length of the string you want B@26a7b76d
+        String passCode = secureRandomPassCode.ints(100, 0, chrs.length()).mapToObj(i -> chrs.charAt(i))
+                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
 
-            return codes;
+        codes.add(passCode.getBytes(Charset.forName("UTF-8")));
 
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
         return codes;
     }
 
