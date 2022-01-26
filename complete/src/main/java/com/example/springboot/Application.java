@@ -20,7 +20,7 @@ public class Application {
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, NoSuchProviderException, NoSuchAlgorithmException {
 		DBHelper.SQLinit();
 		//DBHelper.createMobileTable();
-		ArrayList<byte[]> codes = generateCodes();
+		//ArrayList<byte[]> codes = generateCodes();
 		SpringApplication.run(Application.class, args);
 		//DBHelper.insertUser(1, "user1", "pass1");
 	}

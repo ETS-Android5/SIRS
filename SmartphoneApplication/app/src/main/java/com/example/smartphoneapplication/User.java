@@ -1,24 +1,20 @@
 package com.example.smartphoneapplication;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class User {
-    @JsonProperty("ID")
-    private int userId;
-    @JsonProperty("Username")
+
+    /*private int mobile;*/
     private String username;
-    @JsonProperty("Password")
     private String password;
 
-    public User(int id, String name, String pass) {
-        this.userId = id;
+    public User(String name, String pass) {
+        /*this.mobile = mobile;*/
         this.username = name;
         this.password = pass;
     }
 
-    public int getId() {
-        return this.userId;
-    }
+    /*public int getMobile() {
+        return this.mobile;
+    }*/
 
     public String getUsername() {
         return this.username;
@@ -27,6 +23,6 @@ public class User {
     public String getPassword() {
         return this.password;
     }
-}
 
+}
 
