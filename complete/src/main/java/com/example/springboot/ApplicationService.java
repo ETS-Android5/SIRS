@@ -34,7 +34,6 @@ public class ApplicationService {
     public ResponseEntity<String> RegisterUser(User user, String code) throws SQLException, ClassNotFoundException {
         ResponseEntity<String> response = DBHelper.insertUser(user.getUsername(), user.getPassword(), code);
         if (response.getStatusCode() == HttpStatus.OK) {
-            System.out.println("máquina");
             registryOK = true;
         }
         return response;
@@ -43,6 +42,8 @@ public class ApplicationService {
     public ResponseEntity<String> Login(String username, int passcode) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         //TOPT
         String sharedSecret = DBHelper.getSharedSecret(username);
+
+        System.out.println(sharedSecret);
 
         byte[] byteSecret = sharedSecret.getBytes();
 
@@ -53,9 +54,11 @@ public class ApplicationService {
 
             if (totpAuthenticator.authorize(totpSecretKey, passcode, instant)) {
                 DBHelper.Login(username, sharedSecret);
+                System.out.println("FINALMENTE");
                 return new ResponseEntity<String>("Login done", HttpStatus.OK);
             }
         }
+        System.out.println("DEU COCO");
         return new ResponseEntity<String>("Login Error", HttpStatus.BAD_REQUEST);
     }
 
