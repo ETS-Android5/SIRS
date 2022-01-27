@@ -7,6 +7,8 @@ import com.example.springboot.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -15,21 +17,37 @@ import java.sql.SQLException;
 @Service
 public class ApplicationService {
 
-    public String RegisterMobile(byte[] code, byte[] sharedSecret) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+    public boolean registryOK = false;
+
+    public String RegisterMobile(String code, String sharedSecret) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         //code is generated in the frontend
-        return DBHelper.insertRegistrationCode(code, sharedSecret);
+        System.out.println(code);
+        DBHelper.insertRegistrationCode(code, sharedSecret);
+
+        long start = System.currentTimeMillis();
+        long end = start + 300*1000;
+
+        while (!registryOK && System.currentTimeMillis() < end) continue;
+        return "OK";
     }
 
-    public ResponseEntity<String> RegisterUser(User user, byte[] code) throws SQLException, ClassNotFoundException {
-        return DBHelper.insertUser(user.getUsername(), user.getPassword(), code);
+    public ResponseEntity<String> RegisterUser(User user, String code) throws SQLException, ClassNotFoundException {
+        ResponseEntity<String> response = DBHelper.insertUser(user.getUsername(), user.getPassword(), code);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            System.out.println("máquina");
+            registryOK = true;
+        }
+        return response;
     }
 
     public ResponseEntity<String> Login(String username, int passcode) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         //TOPT
-        byte[] sharedSecret = DBHelper.getSharedSecret(username);
+        String sharedSecret = DBHelper.getSharedSecret(username);
+
+        byte[] byteSecret = sharedSecret.getBytes();
 
         if (sharedSecret != null) {
-            TOTPSecretKey totpSecretKey = new TOTPSecretKey(sharedSecret);
+            TOTPSecretKey totpSecretKey = new TOTPSecretKey(byteSecret);
             TOTPAuthenticator totpAuthenticator = new TOTPAuthenticator();
             Instant instant = Instant.now();
 

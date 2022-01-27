@@ -21,11 +21,11 @@ import org.apache.commons.codec.binary.Hex;
 public class KeyGenerator {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static ArrayList<byte[]> generateCodes() throws NoSuchAlgorithmException, NoSuchProviderException {
+    public static ArrayList<String> generateCodes() throws NoSuchAlgorithmException, NoSuchProviderException {
 
 
 
-        ArrayList<byte[]> codes = new ArrayList<>();
+        ArrayList<String> codes = new ArrayList<>();
 
         String chrs = "0123456789abcdefghijklmnopqrstuvwxyz-_ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         SecureRandom secureRandomSharedSecret = SecureRandom.getInstanceStrong();
@@ -33,22 +33,15 @@ public class KeyGenerator {
         String sharedSecret = secureRandomSharedSecret.ints(100, 0, chrs.length()).mapToObj(i -> chrs.charAt(i))
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
 
-        Base32 secret_base32 = new Base32();
-        byte[] secret = secret_base32.decode(sharedSecret);
-
-        codes.add(secret);
+        codes.add(sharedSecret);
 
         SecureRandom secureRandomPassCode = SecureRandom.getInstanceStrong();
         // 9 is the length of the string you want B@26a7b76d
 
-        String passCode = secureRandomPassCode.ints(100, 0, chrs.length()).mapToObj(i -> chrs.charAt(i))
+        String passCode = secureRandomPassCode.ints(10, 0, chrs.length()).mapToObj(i -> chrs.charAt(i))
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
 
-
-        Base32 code_base32 = new Base32();
-        byte[] code = code_base32.decode(passCode);
-
-        codes.add(code);
+        codes.add(passCode);
 
         return codes;
     }
