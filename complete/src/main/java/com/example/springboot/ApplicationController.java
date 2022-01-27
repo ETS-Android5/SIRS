@@ -37,8 +37,8 @@ public class ApplicationController {
     @PostMapping(value="/RegisterMobile", consumes = "application/json")
     public String RegisterMobile(@RequestBody Map<String, Object> body) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         //return value is code to insert in
-        byte[] randomCode = (byte[]) body.get("randomCode");
-        byte[] sharedSecret = (byte[]) body.get("sharedSecret");
+        String randomCode = body.get("randomCode").toString();
+        String sharedSecret = body.get("sharedSecret").toString();
         return AppService.RegisterMobile(randomCode, sharedSecret);
     }
 
@@ -49,11 +49,13 @@ public class ApplicationController {
         int passwordHash = payload.get("var2").toString().hashCode();
         String code = payload.get("var3").toString();
 
-        byte[] byteCode = code.getBytes();
+        System.out.println(username);
+        System.out.println(passwordHash);
+        System.out.println(code);
 
-        User userRegistration = new User( username  , passwordHash );
+        User userRegistration = new User(username, passwordHash);
 
-        return AppService.RegisterUser(userRegistration, byteCode);
+        return AppService.RegisterUser(userRegistration, code);
     }
 
     @PostMapping(value="/LogIn")

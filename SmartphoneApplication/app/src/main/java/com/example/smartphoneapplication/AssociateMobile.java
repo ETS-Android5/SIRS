@@ -39,7 +39,8 @@ import javax.net.ssl.SSLContext;
 public class AssociateMobile extends AppCompatActivity {
 
     private String code;
-    private byte[] sharedSecret = new byte[128];
+    private String sharedSecret;
+
     TextView randomCode;
     Button generateButton;
 
@@ -56,12 +57,11 @@ public class AssociateMobile extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void generateCode(View view) throws NoSuchProviderException, NoSuchAlgorithmException {
-        ArrayList<byte[]> codes = KeyGenerator.generateCodes();
-        byte[] code = codes.get(1);
-        byte[] sharedSecret = codes.get(0);
-        Base32 base32 = new Base32();
-        String stCode = new String(code, StandardCharsets.UTF_8);
-        randomCode.setText(stCode);
+        ArrayList<String> codes = KeyGenerator.generateCodes();
+        code = codes.get(1);
+        sharedSecret = codes.get(0);
+
+        randomCode.setText(code);
         final String uri = "https://10.0.2.2:8443/RegisterMobile";
         new RESTTask().execute(uri);
     }

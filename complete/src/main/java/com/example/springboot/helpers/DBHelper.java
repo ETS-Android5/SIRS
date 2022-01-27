@@ -26,11 +26,11 @@ public class DBHelper {
 
             //create user table
             statement.executeUpdate("drop table if exists user");
-            statement.executeUpdate("create table user (username string, password int, sharedSecret byte[], loggedIn int)"); //loggedIn 1 loggetOut 0
+            statement.executeUpdate("create table user (username string, password int, sharedSecret string, loggedIn int)"); //loggedIn 1 loggetOut 0
 
             //create registration table
             statement.executeUpdate("drop table if exists registration");
-            statement.executeUpdate("create table registration (code byte[], sharedSecret byte[])");
+            statement.executeUpdate("create table registration (code string, sharedSecret string)");
 
             /*//create worker table
             statement.executeUpdate("drop table if exists worker");
@@ -59,7 +59,7 @@ public class DBHelper {
         }
     }
 
-    public static ResponseEntity<String> insertUser(String username, int password, byte[] code) throws  SQLException {
+    public static ResponseEntity<String> insertUser(String username, int password, String code) throws  SQLException {
         Connection connection = null;
         connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
@@ -67,29 +67,32 @@ public class DBHelper {
         String message = "";
         HttpStatus httpStatus = null;
 
-        if (confirmRegistrationCode(code).toString() != "Already associated to an account") {
+        System.out.println(confirmRegistrationCode(code).toString());
+
+        if (confirmRegistrationCode(code).toString() != "NOT OK") {
+            System.out.println("errado");
             message = confirmRegistrationCode(code).toString();
             httpStatus = HttpStatus.BAD_REQUEST;
             return new ResponseEntity<String>(message, httpStatus);
         }
 
-        String sql = "INSERT INTO user(username, password, code, sharedSecret, loggedIn) VALUES(?,?,? ?)";
+        String sql = "INSERT INTO user(username, password, sharedSecret, loggedIn) VALUES(?,?,? ?)";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, username);
             pstmt.setInt(2, password);
-            pstmt.setBytes(3, code);
 
             String selectSql = "SELECT sharedSecret FROM registration where code = ?";
             try (PreparedStatement selectPstmt = connection.prepareStatement(selectSql)) {
-                selectPstmt.setBytes(1, code);
+                selectPstmt.setString(1, code);
                 rs = selectPstmt.executeQuery();
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
 
-            pstmt.setBytes(4, rs.getBytes("sharedSecret"));
-            pstmt.setInt(5, 0);
+            System.out.println(rs.getString("sharedSecret"));
+            pstmt.setString(3, rs.getString("sharedSecret"));
+            pstmt.setInt(4, 0);
 
             pstmt.executeUpdate();
 
@@ -112,7 +115,7 @@ public class DBHelper {
         return new ResponseEntity<String>("Registration concluded", HttpStatus.OK);
     }
 
-    public static String Login(String username, byte[] sharedSecret) throws  SQLException {
+    public static String Login(String username, String sharedSecret) throws  SQLException {
         Connection connection = null;
         connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
@@ -120,7 +123,7 @@ public class DBHelper {
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, 1);
-            pstmt.setBytes(2, sharedSecret);
+            pstmt.setString(2, sharedSecret);
             pstmt.setString(3, username);
             pstmt.executeUpdate();
 
@@ -177,42 +180,49 @@ public class DBHelper {
     }
 
 
-    public static ResponseEntity<String> confirmRegistrationCode(byte[] code) throws  SQLException {
+    public static ResponseEntity<String> confirmRegistrationCode(String code) throws  SQLException {
         Connection connection = null;
         connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
-        String sql = "SELECT code FROM registration WHERE code = ?";
-        ResultSet rs = null;
+        String other = "SELECT code FROM registration WHERE code = ?";
         String message = "";
         HttpStatus httpStatus = null;
 
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setBytes(1, code);
-            rs = pstmt.executeQuery(sql);
-            if (rs.getBytes("code") == code) { //Code already in the registration table
+        System.out.println("Estou aqui");
+        try (PreparedStatement pstmt = connection.prepareStatement(other)) {
+            System.out.println("consegui");
+            pstmt.setString(1, code);
+            System.out.println("alo");
+            ResultSet rs = pstmt.executeQuery();
+            System.out.println("aqui");
+            if (rs.next()) { //Code already in the registration table
                 message = "NOT OK";
+                System.out.println(message);
                 httpStatus = HttpStatus.BAD_REQUEST;
+                System.out.println("entrei");
             }
-            message = "OK";
-            httpStatus = HttpStatus.OK;
-
+            else {
+                message = "OK";
+                System.out.println(message);
+                httpStatus = HttpStatus.OK;
+                System.out.println("continuei");
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        try
-        {
-            if(connection != null)
-                connection.close();
+        finally {
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                // connection close failed.
+                System.err.println(e);
+            }
+            return new ResponseEntity<String>(message, httpStatus);
         }
-        catch(SQLException e)
-        {
-            // connection close failed.
-            System.err.println(e);
-        }
-        return new ResponseEntity<String>(message, httpStatus);
     }
 
-    public static String insertRegistrationCode(byte[] code, byte[] sharedSecret) throws  SQLException {
+    public static String insertRegistrationCode(String code, String sharedSecret) throws  SQLException {
         Connection connection = null;
         connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
@@ -221,12 +231,13 @@ public class DBHelper {
         if (confirmRegistrationCode(code).toString() == "NOT OK") {
             message = "NOT OK";
         }
+
         else {
             String sql = "INSERT INTO registration(code, sharedSecret) VALUES(?,?)";
 
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                pstmt.setBytes(1, code);
-                pstmt.setBytes(2, sharedSecret);
+                pstmt.setString(1, code);
+                pstmt.setString(2, sharedSecret);
                 pstmt.executeUpdate();
                 //message = "Mobile associated with success";
                 //httpStatus = HttpStatus.OK;
@@ -247,17 +258,17 @@ public class DBHelper {
         return message;
     }
 
-    public static byte[] getSharedSecret(String username) throws  SQLException {
+    public static String getSharedSecret(String username) throws  SQLException {
         Connection connection = null;
         connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
-        byte[] result = null;
+        String result = null;
 
         String sql = "SELECT sharedSecret FROM user WHERE username = ?)";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, username);
-            result = pstmt.executeQuery().getBytes("sharedSecret");
+            result = pstmt.executeQuery().getString("sharedSecret");
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
