@@ -294,7 +294,7 @@ public class DBHelper {
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, username);
-            result = pstmt.executeQuery().getInt("passwordHash");
+            result = pstmt.executeQuery().getInt("password");
 
             if (result == passwordHash) return true;
 

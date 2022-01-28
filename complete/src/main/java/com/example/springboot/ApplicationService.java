@@ -82,7 +82,7 @@ public class ApplicationService {
 
     }
 
-    public void PurchaseRequest(String username, int passwordHash, String product, String price, long expiration) {
+    public void PurchaseRequest(String username, String product, String price, long expiration) {
 
         return;
     }

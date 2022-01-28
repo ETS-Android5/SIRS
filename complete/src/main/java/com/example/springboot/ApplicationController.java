@@ -56,7 +56,7 @@ public class ApplicationController {
         
         String username = payload.get("var1").toString() ;
         int passwordHash = payload.get("var2").toString().hashCode();
-        int code = Integer.parseInt( payload.get("var2").toString() );
+        int code = Integer.parseInt( payload.get("var3").toString() );
 
         //int code2 = code.parseInt();
 
@@ -85,12 +85,11 @@ public class ApplicationController {
     public void PurchaseRequest(@RequestBody Map<String , Object> info) {
 
         String username = info.get("var1").toString();
-        int passwordHash = info.get("var2").toString().hashCode();
-        String product = info.get("var3").toString();
-        String price = info.get("var4").toString();
-        long expiration = Long.parseLong(info.get("var5").toString());
+        String product = info.get("var2").toString();
+        String price = info.get("var3").toString();
+        long expiration = Long.parseLong(info.get("var4").toString());
 
-        AppService.PurchaseRequest(username, passwordHash, product, price, expiration);
+        AppService.PurchaseRequest(username,  product, price, expiration);
     }
 
 /*
