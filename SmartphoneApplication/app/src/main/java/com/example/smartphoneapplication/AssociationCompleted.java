@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.Duration;
 
@@ -23,9 +24,10 @@ public class AssociationCompleted extends AppCompatActivity {
 
     //private byte[] sharedSecret = new byte[128];
      //new byte[] { "0xe04fd020ea3a6910a2d808002b30309d" };
-    private byte[] sharedSecret = hexStringToByteArray("e04fd020ea3a6910a2d808002b30309d");
+    //private byte[] sharedSecret = hexStringToByteArray("e04fd020ea3a6910a2d808002b30309d");
+    private String sharedSecret;
     private Timer timer;
-    long TIME_WINDOW = Duration.ofSeconds(30).toMillis();
+    long TIME_WINDOW = Duration.ofSeconds(90).toMillis();
     TextView totp;
 
     @Override
@@ -33,7 +35,7 @@ public class AssociationCompleted extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_association_completed);
         Bundle bundle = getIntent().getExtras();
-        //sharedSecret = bundle.getByteArray("sharedSecret");
+        sharedSecret = bundle.getString("sharedSecret");
         totp = (TextView) findViewById(R.id.totpNumber);
         start();
     }
@@ -55,8 +57,9 @@ public class AssociationCompleted extends AppCompatActivity {
             Log.d("entrei", "ENTREI");
             TOTPAuthenticator totpAuthenticator = null;
             try {
+                byte[] byteSecret = sharedSecret.getBytes();
                 totpAuthenticator = new TOTPAuthenticator();
-                TOTPSecretKey secretKey = new TOTPSecretKey(sharedSecret);
+                TOTPSecretKey secretKey = new TOTPSecretKey(byteSecret);
                 int totpNumber = totpAuthenticator.createOneTimePassword(secretKey, Instant.now());
                 Log.d("totp", String.valueOf(totpNumber));
                 totp.setText(String.valueOf(totpNumber));

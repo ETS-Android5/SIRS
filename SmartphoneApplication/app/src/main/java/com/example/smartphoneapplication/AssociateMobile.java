@@ -62,7 +62,7 @@ public class AssociateMobile extends AppCompatActivity {
         sharedSecret = codes.get(0);
 
         randomCode.setText(code);
-        final String uri = "https://10.0.2.2:8443/RegisterMobile";
+        final String uri = "https://192.168.37.6:8443/RegisterMobile";
         new RESTTask().execute(uri);
     }
 
@@ -90,7 +90,7 @@ public class AssociateMobile extends AppCompatActivity {
 
     private InputStream getInputStream(String user, String password) throws IOException
     {
-        URL url = new URL("https://10.0.2.2:8443/test");
+        URL url = new URL("https://192.168.37.6:8443/test");
         HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
 
         // Create the SSL connection

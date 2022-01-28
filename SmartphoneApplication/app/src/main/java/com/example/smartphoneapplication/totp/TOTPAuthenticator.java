@@ -32,7 +32,7 @@ public final class TOTPAuthenticator {
 
     public TOTPAuthenticator() throws Throwable {
         secureRandom = new ReseedingSecureRandom();
-        config = new TOTPConfig(Duration.ofSeconds(30), 15, SCRATCH_CODE_LENGTH, SCRATCH_CODE_MODULUS);
+        config = new TOTPConfig(Duration.ofSeconds(90), 15, SCRATCH_CODE_LENGTH, SCRATCH_CODE_MODULUS);
 
     }
 

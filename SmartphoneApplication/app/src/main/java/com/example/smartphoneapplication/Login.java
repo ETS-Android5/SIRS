@@ -28,7 +28,7 @@ public class Login extends AppCompatActivity {
     TextView textViewCodeGenerator;
 
     public void sendMessage(View view) {
-        final String uri = "http://10.0.2.2:8080/RegisterMobile";
+        final String uri = "http://192.168.37.6:8443/RegisterMobile";
         new RESTTask().execute(uri);
     }
 

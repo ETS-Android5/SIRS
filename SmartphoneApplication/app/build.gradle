@@ -45,7 +45,6 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.0'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
-    implementation files('/Users/sanchabarroso/Desktop/bcprov-jdk15on-170.jar')
     implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.8.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
