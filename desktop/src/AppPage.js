@@ -70,8 +70,8 @@ export default class AppPage extends Component{
 
         return (
             <>
-                <>Product no1 </>
                 {state3}
+                <>Product no1 </>
                 <button onClick={()=> this.buyProduct( "Product no1" , this , 34 ) }> Buy </button>
                 <p>34$</p>
                 <p></p>

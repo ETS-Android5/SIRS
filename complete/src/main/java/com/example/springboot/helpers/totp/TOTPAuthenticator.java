@@ -140,11 +140,14 @@ public final class TOTPAuthenticator {
         //int i = start;
         //int var10 = end;
         //if (start <= end) {
+        System.out.println("Confirming TOTP ...");
+        System.out.println("TOTP given- " + code);
         while(start <= end) {
             int hash = 0;
 
             try {
                 hash = this.calculateCode(key, timeWindow + (long)start);
+                System.out.println("TOTP generated- " + hash);
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }

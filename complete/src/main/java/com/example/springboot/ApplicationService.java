@@ -25,7 +25,6 @@ public class ApplicationService {
 
     public String RegisterMobile(String code, String sharedSecret) throws SQLException {
         //code is generated in the frontend
-        System.out.println(code);
 
         if(DBHelper.insertRegistrationCode(code, sharedSecret) == "NOT OK")
             return "NOT OK";
@@ -36,8 +35,6 @@ public class ApplicationService {
         while (!registryOK && System.currentTimeMillis() < end) continue;
         if (System.currentTimeMillis() >= end)
             return "NOT OK";
-        System.out.println(registryOK);
-        System.out.println("Guardou o user mobile " + userMobile);
         return userMobile;
     }
 
@@ -46,7 +43,6 @@ public class ApplicationService {
         if (response.getStatusCode() == HttpStatus.OK) {
             registryOK = true;
             userMobile = user.getUsername();
-            System.out.println("userMobile: " + userMobile);
         }
         return response;
     }
@@ -68,18 +64,17 @@ public class ApplicationService {
 
                     if (totpAuthenticator.authorize(totpSecretKey, passcode, instant)) {
                         DBHelper.Login(username, sharedSecret);
+                        System.out.println("TOTP confirmed!");
                         return new ResponseEntity<String>("Login done", HttpStatus.OK);
                     }
                     return new ResponseEntity<String>("Login error", HttpStatus.BAD_REQUEST);
 
                 }
             }  catch (Throwable throwable) {
-                System.out.println("Entrou no catch");
                 throwable.printStackTrace();
             }
         }
 
-        System.out.println("DEU COCO");
         return new ResponseEntity<String>("Login Error", HttpStatus.BAD_REQUEST);
     }
 
@@ -92,7 +87,6 @@ public class ApplicationService {
     public String RefreshPurchase(String username, int totp) throws SQLException {
 
         String sharedSecret = DBHelper.getSharedSecret(username);
-        System.out.println(username);
 
         byte[] byteSecret = sharedSecret.getBytes();
         Map<String, Object> purchase = new HashMap<>();
@@ -104,9 +98,12 @@ public class ApplicationService {
                 TOTPAuthenticator totpAuthenticator = new TOTPAuthenticator();
                 Instant instant = Instant.now();
 
-                if (totpAuthenticator.createOneTimePassword(totpSecretKey, instant) == totp) {
+                if (totpAuthenticator.authorize(totpSecretKey, totp, instant)) {
+                    System.out.println("TOTP confirmed!");
                     if(purchases.containsKey(username)) {
+                        System.out.println("Sendind mobile folowing message:");
                         System.out.println(purchases.get(username).get("product") + " - " + purchases.get(username).get("price") + " - " + purchases.get(username).get("expiration").toString());
+                        System.out.println("\n");
                         return purchases.get(username).get("product") + " - " + purchases.get(username).get("price") + " - " + purchases.get(username).get("expiration").toString();
                     }
                     else
@@ -114,7 +111,6 @@ public class ApplicationService {
                 }
             }
         }  catch (Throwable throwable) {
-            System.out.println("Entrou no catch");
             throwable.printStackTrace();
         }
         return null;
