@@ -35,6 +35,7 @@ public class ApplicationService {
         while (!registryOK && System.currentTimeMillis() < end) continue;
         if (System.currentTimeMillis() >= end)
             return "NOT OK";
+        System.out.println("usermobile to be sent->"+ userMobile);
         return userMobile;
     }
 
