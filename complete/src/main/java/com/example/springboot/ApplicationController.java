@@ -5,10 +5,7 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -58,6 +55,7 @@ public class ApplicationController {
     public ResponseEntity<String> UserLogIn(@RequestBody Map<String , Object> payload) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         
         String username = payload.get("var1").toString() ;
+        int passwordHash = payload.get("var2").toString().hashCode();
         int code = Integer.parseInt( payload.get("var2").toString() );
 
         //int code2 = code.parseInt();
@@ -66,7 +64,7 @@ public class ApplicationController {
         System.out.println(code);
         
         
-        return AppService.Login(username, code);
+        return AppService.Login(username, passwordHash ,code);
     }
 
     @PostMapping(value="/LogOut")
@@ -77,6 +75,24 @@ public class ApplicationController {
 
         return AppService.Logout(username);
     }
+
+    @GetMapping(value="/RefreshPurchase")
+    public void RefreshPurchase() {
+        AppService.RefreshPurchase();
+    }
+
+    @PostMapping(value="/PurchaseRequest")
+    public void PurchaseRequest(@RequestBody Map<String , Object> info) {
+
+        String username = info.get("var1").toString();
+        int passwordHash = info.get("var2").toString().hashCode();
+        String product = info.get("var3").toString();
+        String price = info.get("var4").toString();
+        long expiration = Long.parseLong(info.get("var5").toString());
+
+        AppService.PurchaseRequest(username, passwordHash, product, price, expiration);
+    }
+
 /*
     public ResponseEntity<ArrayList<Integer>> LoginMobile(@RequestBody String username, @RequestBody String passcode) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         //return value is code to insert in

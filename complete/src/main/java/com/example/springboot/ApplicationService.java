@@ -39,31 +39,34 @@ public class ApplicationService {
         return response;
     }
 
-    public ResponseEntity<String> Login(String username, int passcode) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+    public ResponseEntity<String> Login(String username, int passwordHash, int passcode) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         //TOPT
-        String sharedSecret = DBHelper.getSharedSecret(username);
+        if (DBHelper.checkPassword(username, passwordHash)) {
 
-        byte[] byteSecret = sharedSecret.getBytes();
-        
-        try{
-            if (sharedSecret != null) {
-            
-                TOTPSecretKey totpSecretKey = new TOTPSecretKey(byteSecret);
-                TOTPAuthenticator totpAuthenticator = new TOTPAuthenticator();
-                Instant instant = Instant.now();
-                
-                if (totpAuthenticator.authorize(totpSecretKey, passcode, instant)) {
-                    DBHelper.Login(username, sharedSecret);
-                    return new ResponseEntity<String>("Login done", HttpStatus.OK);
+            String sharedSecret = DBHelper.getSharedSecret(username);
+
+            byte[] byteSecret = sharedSecret.getBytes();
+
+            try{
+                if (sharedSecret != null) {
+
+                    TOTPSecretKey totpSecretKey = new TOTPSecretKey(byteSecret);
+                    TOTPAuthenticator totpAuthenticator = new TOTPAuthenticator();
+                    Instant instant = Instant.now();
+
+                    if (totpAuthenticator.authorize(totpSecretKey, passcode, instant)) {
+                        DBHelper.Login(username, sharedSecret);
+                        return new ResponseEntity<String>("Login done", HttpStatus.OK);
+                    }
+                    return new ResponseEntity<String>("Login done", HttpStatus.BAD_REQUEST);
+
                 }
-                return new ResponseEntity<String>("Login done", HttpStatus.BAD_REQUEST);
-
+            }  catch (Throwable throwable) {
+                System.out.println("Entrou no catch");
+                throwable.printStackTrace();
             }
-        }  catch (Throwable throwable) {
-            System.out.println("Entrou no catch");
-            throwable.printStackTrace();
         }
-        
+
         System.out.println("DEU COCO");
         return new ResponseEntity<String>("Login Error", HttpStatus.BAD_REQUEST);
     }
@@ -73,6 +76,17 @@ public class ApplicationService {
         return DBHelper.Logout(username , sharedSecret);
         
     }
+
+    public void RefreshPurchase() {
+        return;
+
+    }
+
+    public void PurchaseRequest(String username, int passwordHash, String product, String price, long expiration) {
+
+        return;
+    }
+
      /*public String RegisterWorker(User user) throws SQLException, ClassNotFoundException {
         //create a userId
         //it is generated a secret key

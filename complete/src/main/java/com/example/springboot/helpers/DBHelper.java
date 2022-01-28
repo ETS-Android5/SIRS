@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.beans.PropertyEditorSupport;
-import java.net.http.HttpRequest;
 import java.sql.*;
 
 public class DBHelper {
@@ -283,6 +282,34 @@ public class DBHelper {
         }
         //return new ResponseEntity<String>(message, httpStatus);
         return result;
+    }
+
+    public static boolean checkPassword(String username, int passwordHash) throws  SQLException {
+        Connection connection = null;
+        connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
+
+        int result;
+
+        String sql = "SELECT password FROM user WHERE username = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            result = pstmt.executeQuery().getInt("passwordHash");
+
+            if (result == passwordHash) return true;
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            System.out.println("Error");
+        }
+        try {
+            if (connection != null)
+                connection.close();
+        } catch (SQLException e) {
+            // connection close failed.
+            System.err.println(e);
+        }
+        return false;
     }
 
 }
