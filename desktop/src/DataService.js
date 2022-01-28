@@ -35,9 +35,9 @@ class DataService {
         return aux ;
     }
 
-    async logIn( username , code ) {
+    async logIn( username , password,  code ) {
         let aux;
-        aux = await axios.post(`${LOGIN_URL}`, {var1: username, var2: code});
+        aux = await axios.post(`${LOGIN_URL}`, {var1: username, var2: password , var3:code });
         console.log("Login Successfully sent");
         console.log(aux);
         return aux

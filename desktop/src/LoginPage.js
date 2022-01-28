@@ -12,10 +12,11 @@ export default class LoginPage extends Component{
 
         let name = document.getElementById("USERNAME").value;
         let code = document.getElementById("CODE").value;
+        let password = document.getElementById("PASSWORD").value;
 
         console.log(DataService.getLogin() );
 
-        DataService.logIn(name, code).then(r => {
+        DataService.logIn(name, password , code).then(r => {
             console.log( r.status )
             if ( r.status === 200){
                 obj.setState({ LoginVal : 1 });
@@ -39,6 +40,9 @@ export default class LoginPage extends Component{
         return (
             <>
                 Username: <input type={"text"} id={"USERNAME"}>
+                </input>
+                <p> </p>
+                Password: <input type={"text"} id={"PASSWORD"}>
                 </input>
                 <p> </p>
                 Generated Code: <input type={"text"} id={"CODE"}>
