@@ -84,6 +84,8 @@ public class AssociationCompleted extends AppCompatActivity {
         purchaseRequest = (TextView) findViewById(R.id.purchaseRequest);
         acceptButton = (Button) findViewById(R.id.acceptButton);
         rejectButton = (Button) findViewById(R.id.rejectButton);
+        acceptButton.setVisibility(View.INVISIBLE);
+        rejectButton.setVisibility(View.INVISIBLE);
         start();
     }
 
