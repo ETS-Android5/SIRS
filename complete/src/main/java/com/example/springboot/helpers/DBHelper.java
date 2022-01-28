@@ -263,8 +263,6 @@ public class DBHelper {
             pstmt.setString(1, sharedSecret);
             result = pstmt.executeQuery().getString("username");
 
-            System.out.println("Resultado-");
-            System.out.println(result);
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -292,8 +290,7 @@ public class DBHelper {
             pstmt.setString(1, username);
             result = pstmt.executeQuery().getString("sharedSecret");
             
-            System.out.println("Resultado-");
-            System.out.println(result);
+          
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
