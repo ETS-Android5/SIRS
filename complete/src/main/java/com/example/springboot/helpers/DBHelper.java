@@ -1,10 +1,8 @@
 package com.example.springboot.helpers;
 
-import com.example.springboot.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.beans.PropertyEditorSupport;
 import java.sql.*;
 
 public class DBHelper {
@@ -14,7 +12,6 @@ public class DBHelper {
         System.out.println("Initializing DB...");
         // load the sqlite-JDBC driver using the current class loader
         Class.forName("org.sqlite.JDBC");
-        //DriverManager.registerDriver(new org.sqlite.JDBC());
 
         Connection connection = null;
 
@@ -252,6 +249,35 @@ public class DBHelper {
         }
         //return new ResponseEntity<String>(message, httpStatus);
         return message;
+    }
+
+    public static String getUsername(String sharedSecret) throws  SQLException {
+        Connection connection = null;
+        connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
+
+        String result = null;
+
+        String sql = "SELECT username FROM user WHERE sharedSecret = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, sharedSecret);
+            result = pstmt.executeQuery().getString("username");
+
+            System.out.println("Resultado-");
+            System.out.println(result);
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            System.out.println("Error selecting sharedsecret from USER in the DB");
+        }
+        try {
+            if (connection != null)
+                connection.close();
+        } catch (SQLException e) {
+            // connection close failed.
+            System.err.println(e);
+        }
+        return result;
     }
 
     public static String getSharedSecret(String username) throws  SQLException {

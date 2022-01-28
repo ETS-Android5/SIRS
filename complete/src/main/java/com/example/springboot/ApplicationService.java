@@ -4,50 +4,55 @@ import com.example.springboot.helpers.DBHelper;
 import com.example.springboot.helpers.totp.TOTPAuthenticator;
 import com.example.springboot.helpers.totp.TOTPSecretKey;
 import com.example.springboot.user.User;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 @Service
 public class ApplicationService {
 
     private boolean registryOK = false;
-    private HashMap<String, Map<String,Object>> map = new HashMap<>();
+    private boolean authorized = false;
+    private String userMobile;
+    private HashMap<String, Map<String,Object>> purchases = new HashMap<>();
 
-    public String RegisterMobile(String code, String sharedSecret) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+    public String RegisterMobile(String code, String sharedSecret) throws SQLException {
         //code is generated in the frontend
         System.out.println(code);
-        DBHelper.insertRegistrationCode(code, sharedSecret);
+
+        if(DBHelper.insertRegistrationCode(code, sharedSecret) == "NOT OK")
+            return "NOT OK";
 
         long start = System.currentTimeMillis();
         long end = start + 300*1000;
 
         while (!registryOK && System.currentTimeMillis() < end) continue;
-        return "OK";
+        if (System.currentTimeMillis() >= end)
+            return "NOT OK";
+        System.out.println(registryOK);
+        System.out.println("Guardou o user mobile " + userMobile);
+        return userMobile;
     }
 
-    public ResponseEntity<String> RegisterUser(User user, String code) throws SQLException, ClassNotFoundException {
+    public ResponseEntity<String> RegisterUser(User user, String code) throws SQLException  {
         ResponseEntity<String> response = DBHelper.insertUser(user.getUsername(), user.getPassword(), code);
         if (response.getStatusCode() == HttpStatus.OK) {
             registryOK = true;
+            userMobile = user.getUsername();
+            System.out.println("userMobile: " + userMobile);
         }
         return response;
     }
 
-    public ResponseEntity<String> Login(String username, int passwordHash, int passcode) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
-        //TOPT
+    public ResponseEntity<String> Login(String username, int passwordHash, int passcode) throws SQLException {
+        //TOTP
         if (DBHelper.checkPassword(username, passwordHash)) {
 
             String sharedSecret = DBHelper.getSharedSecret(username);
@@ -65,7 +70,7 @@ public class ApplicationService {
                         DBHelper.Login(username, sharedSecret);
                         return new ResponseEntity<String>("Login done", HttpStatus.OK);
                     }
-                    return new ResponseEntity<String>("Login done", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<String>("Login error", HttpStatus.BAD_REQUEST);
 
                 }
             }  catch (Throwable throwable) {
@@ -84,32 +89,62 @@ public class ApplicationService {
         
     }
 
-    public void RefreshPurchase() {
-        return;
+    public String RefreshPurchase(String username, int totp) throws SQLException {
 
+        String sharedSecret = DBHelper.getSharedSecret(username);
+        System.out.println(username);
+
+        byte[] byteSecret = sharedSecret.getBytes();
+        Map<String, Object> purchase = new HashMap<>();
+
+        try{
+            if (sharedSecret != null) {
+
+                TOTPSecretKey totpSecretKey = new TOTPSecretKey(byteSecret);
+                TOTPAuthenticator totpAuthenticator = new TOTPAuthenticator();
+                Instant instant = Instant.now();
+
+                if (totpAuthenticator.createOneTimePassword(totpSecretKey, instant) == totp) {
+                    if(purchases.containsKey(username)) {
+                        System.out.println(purchases.get(username).get("product") + " - " + purchases.get(username).get("price") + " - " + purchases.get(username).get("expiration").toString());
+                        return purchases.get(username).get("product") + " - " + purchases.get(username).get("price") + " - " + purchases.get(username).get("expiration").toString();
+                    }
+                    else
+                        return null;
+                }
+            }
+        }  catch (Throwable throwable) {
+            System.out.println("Entrou no catch");
+            throwable.printStackTrace();
+        }
+        return null;
     }
 
-    public String PurchaseRequest(String username, String product, String price, long expiration) {
+    public String ConfirmPurchase(Boolean authorization, String username) throws SQLException {
+        purchases.remove(username);
+        if(authorization) {
+            authorized = true;
+            return "OK";
+        }
+        return "NOT OK";
+    }
 
-        HashMap<String, Object> info = new HashMap<>();
+    public ResponseEntity<String> PurchaseRequest(String username, String product, String price, long expiration) {
+
+        Map<String, Object> info = new HashMap<>();
 
         info.put("product", product);
         info.put("price", price);
         info.put("expiration", expiration);
 
-        map.put(username, info);
-        return "OK";
+        purchases.put(username, info);
+
+        long start = System.currentTimeMillis();
+        long end = start + 1800*1000;
+
+        while (!authorized && System.currentTimeMillis() < end) continue;
+        if(System.currentTimeMillis() >= end)
+            return new ResponseEntity<String>("Purchase not authorized", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<String>("Purchase authorized", HttpStatus.OK);
     }
-
-     /*public String RegisterWorker(User user) throws SQLException, ClassNotFoundException {
-        //create a userId
-        //it is generated a secret key
-
-        String generatedKey ="";// = KeyGenerator.generateKeys();
-
-        DBHelper.insertWorker(user.getUsername(), user.getPassword(), generatedKey);
-
-        return "olá!";
-    }*/
-
 }

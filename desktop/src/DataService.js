@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const SERVER_URL = 'https://192.168.37.6:8443'
+const SERVER_URL = 'https://127.0.0.1:8443'
 const REGISTER_URL = `${SERVER_URL}/RegisterUser`
 const LOGIN_URL = `${SERVER_URL}/LogIn`
 const LOGOUT_URL = `${SERVER_URL}/LogOut`

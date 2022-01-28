@@ -29,9 +29,7 @@ dependencies {
 	implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.7.2'
 	implementation 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
 	implementation group: 'commons-codec', name: 'commons-codec', version: '1.11'
-	implementation group: 'de.taimos', name: 'totp', version: '1.0'
 	implementation 'org.jetbrains:annotations:16.0.2'
-
 }
 
 test {

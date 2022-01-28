@@ -39,10 +39,12 @@ import javax.net.ssl.SSLContext;
 public class AssociateMobile extends AppCompatActivity {
 
     private String code;
+    private String username;
     private String sharedSecret;
 
     TextView randomCode;
     Button generateButton;
+    Intent intent;
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -62,73 +64,11 @@ public class AssociateMobile extends AppCompatActivity {
         sharedSecret = codes.get(0);
 
         randomCode.setText(code);
-        final String uri = "https://192.168.37.6:8443/RegisterMobile";
-        new RESTTask().execute(uri);
+        final String uri = "https://10.0.2.2:8443/RegisterMobile";
+        new POSTTask().execute(uri);
     }
 
-    /*public HttpEntity<String> execute(String uri) throws IOException {
-        try {
-            DefaultHttpClient client = new MyHttpClient((HttpParams) getApplicationContext());
-            HttpPost httpPost = new HttpPost(uri);
-
-            String json = "{'randomCode':" + code + ",'name':" + sharedSecret + " }";
-            StringEntity entity = new StringEntity(json);
-            httpPost.setEntity(entity);
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-type", "application/json");
-
-            // Execute the POST call and obtain the response
-            HttpResponse getResponse = client.execute(httpPost);
-            HttpEntity<String> responseEntity = (HttpEntity) getResponse.getEntity();
-
-            return responseEntity;
-        }  catch (Exception e) {
-            Log.e("MainActivity", e.getMessage(), e);
-        }
-        return null;
-    }*/
-
-    private InputStream getInputStream(String user, String password) throws IOException
-    {
-        URL url = new URL("https://192.168.37.6:8443/test");
-        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-
-        // Create the SSL connection
-        SSLContext sc;
-        try {
-            sc = SSLContext.getInstance("TLS");
-            sc.init(null, null, new SecureRandom());
-            conn.setSSLSocketFactory(sc.getSocketFactory());
-
-            // Use this if you need SSL authentication
-            String userPass= user + ":" + password;
-            String basicAuth = "Basic " + Base64.encodeToString(userPass.getBytes(), Base64.DEFAULT);
-            conn.setRequestProperty("Authorization", basicAuth);
-
-            // set Timeout and method
-            conn.setReadTimeout(7000);
-            conn.setConnectTimeout(7000);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json; utf-8");
-            conn.setDoInput(true);
-
-            OutputStream os = new FileOutputStream("test.txt");
-            String jsonInputString = "{" + randomCode + ": "+ code +", " + sharedSecret + ": " + String.valueOf(sharedSecret) + "}";
-
-            byte[] input = jsonInputString.getBytes("utf-8");
-            os.write(input, 0, input.length);
-            // Add any data you wish to post here
-
-            conn.connect();
-            return conn.getInputStream();
-        }
-        catch (Exception e) {
-            Log.e("MainActivity", e.getMessage(), e);
-        }
-        return null;
-    }
-
-    class RESTTask extends AsyncTask<String, Void, HttpResponse> {
+    class POSTTask extends AsyncTask<String, Void, HttpResponse> {
 
         protected HttpResponse doInBackground(String... uri) {
             try {
@@ -155,67 +95,6 @@ public class AssociateMobile extends AppCompatActivity {
             return null;
         }
 
-
-        /*protected ResponseEntity<String> doInBackground(String... uri) {
-            try {
-                DefaultHttpClient client = new MyHttpClient((HttpParams) getApplicationContext());
-                HttpPost httpPost = new HttpPost(uri[0]);
-
-                String json = "{'randomCode':" + code + ",'name':" + sharedSecret + " }";
-                StringEntity entity = new StringEntity(json);
-                httpPost.setEntity(entity);
-                httpPost.setHeader("Accept", "application/json");
-                httpPost.setHeader("Content-type", "application/json");
-
-                // Execute the POST call and obtain the response
-                HttpResponse getResponse = client.execute(httpPost);
-                HttpEntity<String> responseEntity = (HttpEntity) getResponse.getEntity();
-
-                return responseEntity;
-            } catch (Exception e) {
-                Log.e("MainActivity", e.getMessage(), e);
-            }
-            return null;
-        }
-
-        protected ResponseEntity<String> doInBackground(String... uri) {
-            try {
-                Log.d("ENTREI", "entrei 1");
-                final String url = uri[0];
-                RestTemplate restTemplate = new RestTemplate();
-                ObjectMapper mapper = new ObjectMapper();
-                mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-
-                MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-                converter.setObjectMapper(mapper);
-                restTemplate.getMessageConverters().add(converter);
-
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_JSON);
-                headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-
-                Map<String, Object> body = new HashMap<>();
-
-                body.put("randomCode", code);
-                body.put("sharedSecret", sharedSecret);
-
-                HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);*/
-
-                //ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
-
-                /*String encodedAuth = Base64.encodeToString(auth.getBytes(), Base64.DEFAULT);
-                String authHeader = "Basic" + new String(encodedAuth);
-                headers.set("Authorization", authHeader);
-
-                /*ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-
-                return response;
-            } catch (Exception e) {
-                Log.e("MainActivity", e.getMessage(), e);
-            }
-            return null;
-        }*/
-
         @Override
         protected void onPostExecute(HttpResponse response)  {
             Log.d("ENTREI2", "entrei 2");
@@ -227,16 +106,24 @@ public class AssociateMobile extends AppCompatActivity {
             }
             else {
                 HttpEntity httpEntity = response.getEntity();
+
                 try {
                     String apiOutput = EntityUtils.toString(httpEntity, "utf-8");
                     System.out.println(apiOutput);
+                    if(apiOutput == "NOT OK") {
+                        intent = new Intent(AssociateMobile.this, MainActivity.class);
+                    }
+                    else {
+                        System.out.println(apiOutput);
+                        username = apiOutput;
+                        intent = new Intent(AssociateMobile.this, AssociationCompleted.class);
+                        intent.putExtra("sharedSecret", sharedSecret);
+                        intent.putExtra("username", username);
+                    }
+                    startActivity(intent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                Intent intent = new Intent(AssociateMobile.this, AssociationCompleted.class);
-                intent.putExtra("sharedSecret", sharedSecret);
-                startActivity(intent);
             }
         }
     }

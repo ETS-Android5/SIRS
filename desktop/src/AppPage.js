@@ -6,7 +6,8 @@ export default class AppPage extends Component{
     
     state = {
         bool : 0 ,
-        purchase: 0
+        purchase: 0,
+        wait:0
     }
 
     logout(  ) {
@@ -21,11 +22,15 @@ export default class AppPage extends Component{
     }
 
     buyProduct( serialNo , obj, price ) {
-        if( DataService.getLogin !== 1462 ){
+        console.log("entrei");
+        if(DataService.getLogin() !== 1462 ){
+            console.log(" NOT LOGGED IN")
             obj.setState({ bool : 1 });
         }
         else{
-            DataService.buy(DataService.getUsername() ,  serialNo , price , 300000 ).then(r => {
+            console.log("WHY NOT?")
+            obj.setState({wait : 1 })
+            DataService.buy(DataService.getUsername() ,  serialNo , price , 300000).then(r => {
                 //console.log( r.status )
                 if ( r.status === 200 ){
                     console.log(r);
@@ -39,24 +44,34 @@ export default class AppPage extends Component{
 
     render() {
         let state;
-        if (this.state.bool=== 1){
+        let state2;
+        let state3;
+
+        if (this.state.bool === 1){
             state = <p> You are not logged in, press here to log in</p>;
         }
         else{
             state= <p></p>;
         }
 
-        let state2;
         if (this.state.purchase === 1){
-            state = <p> WELL DONE!! You've purchased successfully </p>;
+            state2 = <p> WELL DONE!! You've purchased successfully </p>;
         }
         else{
-            state= <p></p>;
+            state2 = <p></p>;
+        }
+
+        if (this.state.wait === 1){
+            state3 = <h3> Confirm purchase in your moblie device! </h3>;
+        }
+        else{
+            state3 = <p></p>;
         }
 
         return (
             <>
                 <>Product no1 </>
+                {state3}
                 <button onClick={()=> this.buyProduct( "Product no1" , this , 34 ) }> Buy </button>
                 <p>34$</p>
                 <p></p>
@@ -77,9 +92,8 @@ export default class AppPage extends Component{
                 <Link to='/login'>
                 {state}
                 </Link>
-                <p>
                 {state2}
-                </p>
+                
 
             </>
         )
