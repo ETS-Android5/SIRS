@@ -1,4 +1,9 @@
 # SIRS Project 
+- Authors:
+    - António Filipe, 92425;
+    - Lúcia Silva, 92510;
+    - Sancha Barroso, 92557;
+
 ---
 ### REQUIREMENTS:
 - **Hypervisor; (Recommended: ubuntu 20.04 )**
