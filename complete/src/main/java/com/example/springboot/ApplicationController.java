@@ -50,15 +50,13 @@ public class ApplicationController {
         String code = payload.get("var3").toString();
 
         User userRegistration = new User(username, passwordHash);
-
+        
         return AppService.RegisterUser(userRegistration, code);
     }
 
     @PostMapping(value="/LogIn")
     public ResponseEntity<String> UserLogIn(@RequestBody Map<String , Object> payload) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         
-        System.out.println("HEY OH");
-
         String username = payload.get("var1").toString() ;
         int code = Integer.parseInt( payload.get("var2").toString() );
 
@@ -66,13 +64,16 @@ public class ApplicationController {
 
         System.out.println(username);
         System.out.println(code);
-    
+        
+        
         return AppService.Login(username, code);
     }
 
     @PostMapping(value="/LogOut")
     public ResponseEntity<String> UserLogOut(@RequestBody Map<String , Object> payload) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+        
         String username = payload.get("var1").toString();
+        System.out.println(username);
 
         return AppService.Logout(username);
     }

@@ -121,12 +121,11 @@ public class DBHelper {
         Connection connection = null;
         connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
-        String sql = "INSERT INTO user(loggedIn) VALUES(?) WHERE sharedSecret = ? and username = ?";
+        String sql = "UPDATE user SET loggedIn=1 where username=? and sharedSecret=?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, 1);
+            pstmt.setString(1, username);
             pstmt.setString(2, sharedSecret);
-            pstmt.setString(3, username);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -150,15 +149,15 @@ public class DBHelper {
 
     }
 
-    public static ResponseEntity<String> Logout(String username) throws  SQLException {
+    public static ResponseEntity<String> Logout(String username, String sharedSecret) throws  SQLException {
         Connection connection = null;
         connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
-        String sql = "INSERT INTO user(loggedIn) VALUES(?) WHERE username = ?";
+        String sql = "UPDATE user SET loggedIn=0 where username=? and sharedSecret=?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, 0);
-            pstmt.setString(2, username);
+            pstmt.setString(1, username);
+            pstmt.setString(1, sharedSecret);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {

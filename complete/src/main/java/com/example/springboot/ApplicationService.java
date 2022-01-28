@@ -43,28 +43,35 @@ public class ApplicationService {
         //TOPT
         String sharedSecret = DBHelper.getSharedSecret(username);
 
-        System.out.println(sharedSecret);
-
         byte[] byteSecret = sharedSecret.getBytes();
+        
+        try{
+            if (sharedSecret != null) {
+            
+                TOTPSecretKey totpSecretKey = new TOTPSecretKey(byteSecret);
+                TOTPAuthenticator totpAuthenticator = new TOTPAuthenticator();
+                Instant instant = Instant.now();
+                
+                if (totpAuthenticator.authorize(totpSecretKey, passcode, instant)) {
+                    DBHelper.Login(username, sharedSecret);
+                    return new ResponseEntity<String>("Login done", HttpStatus.OK);
+                }
+                return new ResponseEntity<String>("Login done", HttpStatus.BAD_REQUEST);
 
-        if (sharedSecret != null) {
-            TOTPSecretKey totpSecretKey = new TOTPSecretKey(byteSecret);
-            TOTPAuthenticator totpAuthenticator = new TOTPAuthenticator();
-            Instant instant = Instant.now();
-
-            if (totpAuthenticator.authorize(totpSecretKey, passcode, instant)) {
-                DBHelper.Login(username, sharedSecret);
-                System.out.println("FINALMENTE");
-                return new ResponseEntity<String>("Login done", HttpStatus.OK);
             }
+        }  catch (Throwable throwable) {
+            System.out.println("Entrou no catch");
+            throwable.printStackTrace();
         }
+        
         System.out.println("DEU COCO");
         return new ResponseEntity<String>("Login Error", HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<String> Logout(String username) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
-        DBHelper.Logout(username);
-        return new ResponseEntity<String>("Logout Error", HttpStatus.BAD_REQUEST);
+        String sharedSecret = DBHelper.getSharedSecret(username);
+        return DBHelper.Logout(username , sharedSecret);
+        
     }
      /*public String RegisterWorker(User user) throws SQLException, ClassNotFoundException {
         //create a userId

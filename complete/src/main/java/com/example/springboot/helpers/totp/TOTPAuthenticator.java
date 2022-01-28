@@ -28,7 +28,7 @@ public final class TOTPAuthenticator {
     public TOTPAuthenticator() throws Throwable {
         
             secureRandom = new ReseedingSecureRandom();
-            config = new TOTPConfig(Duration.ofSeconds(30), 15, SCRATCH_CODE_LENGTH, SCRATCH_CODE_MODULUS);
+            config = new TOTPConfig(Duration.ofSeconds(90), 15, SCRATCH_CODE_LENGTH, SCRATCH_CODE_MODULUS);
         
     }
 
@@ -54,8 +54,6 @@ public final class TOTPAuthenticator {
         // Checking if the verification code is between the legal bounds.
 
         if (totp <= 0 || totp >= config.getKeyModulus()) {
-            System.out.println(SCRATCH_CODE_MODULUS);
-            System.out.println("Ja?");
             return false;
         }
         return checkCode(secretKey.getValue(), totp, time, this.config.getWindowSize());
@@ -142,15 +140,11 @@ public final class TOTPAuthenticator {
         //int i = start;
         //int var10 = end;
         //if (start <= end) {
-            System.out.println("code-");
-            System.out.println(code);
         while(start <= end) {
             int hash = 0;
 
             try {
                 hash = this.calculateCode(key, timeWindow + (long)start);
-                System.out.println("hash-");
-                System.out.println(hash);
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }
