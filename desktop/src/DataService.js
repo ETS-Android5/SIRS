@@ -4,6 +4,7 @@ const SERVER_URL = 'https://192.168.37.6:8443'
 const REGISTER_URL = `${SERVER_URL}/RegisterUser`
 const LOGIN_URL = `${SERVER_URL}/LogIn`
 const LOGOUT_URL = `${SERVER_URL}/LogOut`
+const BUY_URL = `${SERVER_URL}/PurchaseRequest`
 
 class DataService {
     
@@ -47,6 +48,15 @@ class DataService {
         let aux;
         aux = await axios.post(`${LOGOUT_URL}`, {var1: username});
         console.log("Logout Successfully sent");
+        console.log(aux);
+        return aux
+    }
+
+    async buy( username , product , price , expiration) {
+        console.log(username)
+        let aux;
+        aux = await axios.post(`${BUY_URL}`, {var1: username , var2: product , var3: price ,var4: expiration});
+        console.log("Purchase Successfully sent");
         console.log(aux);
         return aux
     }
