@@ -59,6 +59,8 @@ _Other versions, systems or setups may be used but are untested so may not work_
 
 ### Running
 
-**Registration**
-1. In your Android Emulator press Associate account and select Generate Code. 
-2. In your Desktop choose Register
+**Basic Usage**
+1. To register, first use your Android Emulator press Associate account and select Generate Code. 
+2. In your Desktop use the generated code to register.
+3. After registing, use the TOTP in your phone to login.
+4. When buying something use the phone to confirm the action
