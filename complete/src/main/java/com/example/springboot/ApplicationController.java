@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
@@ -82,14 +83,14 @@ public class ApplicationController {
     }
 
     @PostMapping(value="/PurchaseRequest")
-    public void PurchaseRequest(@RequestBody Map<String , Object> info) {
+    public String PurchaseRequest(@RequestBody Map<String , Object> info) {
 
         String username = info.get("var1").toString();
         String product = info.get("var2").toString();
         String price = info.get("var3").toString();
         long expiration = Long.parseLong(info.get("var4").toString());
 
-        AppService.PurchaseRequest(username,  product, price, expiration);
+        return AppService.PurchaseRequest(username,  product, price, expiration);
     }
 
 /*

@@ -4,6 +4,8 @@ import com.example.springboot.helpers.DBHelper;
 import com.example.springboot.helpers.totp.TOTPAuthenticator;
 import com.example.springboot.helpers.totp.TOTPSecretKey;
 import com.example.springboot.user.User;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,11 +15,16 @@ import java.time.Instant;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 @Service
 public class ApplicationService {
 
-    public boolean registryOK = false;
+    private boolean registryOK = false;
+    private HashMap<String, Map<String,Object>> map = new HashMap<>();
 
     public String RegisterMobile(String code, String sharedSecret) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
         //code is generated in the frontend
@@ -82,9 +89,16 @@ public class ApplicationService {
 
     }
 
-    public void PurchaseRequest(String username, String product, String price, long expiration) {
+    public String PurchaseRequest(String username, String product, String price, long expiration) {
 
-        return;
+        HashMap<String, Object> info = new HashMap<>();
+
+        info.put("product", product);
+        info.put("price", price);
+        info.put("expiration", expiration);
+
+        map.put(username, info);
+        return "OK";
     }
 
      /*public String RegisterWorker(User user) throws SQLException, ClassNotFoundException {
