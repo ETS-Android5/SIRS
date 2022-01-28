@@ -10,11 +10,13 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.time.Duration;
 
 public final class TOTPAuthenticator {
-    private final ReseedingSecureRandom secureRandom = new ReseedingSecureRandom();
-    private final TOTPConfig config = new TOTPConfig();
+    private final ReseedingSecureRandom secureRandom;
+    private final TOTPConfig config  ;
 
+    
     private static final int SECRET_BITS = 80;
     private static final int SCRATCH_CODES = 5;
     private static final int SCRATCH_CODE_LENGTH = 8;
@@ -22,13 +24,21 @@ public final class TOTPAuthenticator {
     private static final int SCRATCH_CODE_INVALID = -1;
     private static final int BYTES_PER_SCRATCH_CODE = 4;
     private static final String HMAC_HASH_FUNCTION = "HmacSHA1";
+    
+    public TOTPAuthenticator() throws Throwable {
+        
+            secureRandom = new ReseedingSecureRandom();
+            config = new TOTPConfig(Duration.ofSeconds(90), 15, SCRATCH_CODE_LENGTH, SCRATCH_CODE_MODULUS);
+        
+    }
+
 
     @NotNull
     public final TOTPCredentials createCredentials() throws Throwable {
         // Allocating a buffer sufficiently large to hold the bytes required by the secret key and the scratch codes.
         byte[] buffer = new byte[30];   //SECRET_BITS / 8 + SCRATCH_CODES * BYTES_PER_SCRATCH_CODE
         this.secureRandom.nextBytes(buffer);
-
+        
         byte[] key = Arrays.copyOf(buffer, 10);    //SECRET_BITS / 8
         int validationCode = this.calculateValidationCode(key);
         List scratchCodes = this.calculateScratchCodes(buffer);

@@ -34,7 +34,6 @@ public class ApplicationService {
     public ResponseEntity<String> RegisterUser(User user, String code) throws SQLException, ClassNotFoundException {
         ResponseEntity<String> response = DBHelper.insertUser(user.getUsername(), user.getPassword(), code);
         if (response.getStatusCode() == HttpStatus.OK) {
-            System.out.println("máquina");
             registryOK = true;
         }
         return response;
@@ -45,23 +44,34 @@ public class ApplicationService {
         String sharedSecret = DBHelper.getSharedSecret(username);
 
         byte[] byteSecret = sharedSecret.getBytes();
+        
+        try{
+            if (sharedSecret != null) {
+            
+                TOTPSecretKey totpSecretKey = new TOTPSecretKey(byteSecret);
+                TOTPAuthenticator totpAuthenticator = new TOTPAuthenticator();
+                Instant instant = Instant.now();
+                
+                if (totpAuthenticator.authorize(totpSecretKey, passcode, instant)) {
+                    DBHelper.Login(username, sharedSecret);
+                    return new ResponseEntity<String>("Login done", HttpStatus.OK);
+                }
+                return new ResponseEntity<String>("Login done", HttpStatus.BAD_REQUEST);
 
-        if (sharedSecret != null) {
-            TOTPSecretKey totpSecretKey = new TOTPSecretKey(byteSecret);
-            TOTPAuthenticator totpAuthenticator = new TOTPAuthenticator();
-            Instant instant = Instant.now();
-
-            if (totpAuthenticator.authorize(totpSecretKey, passcode, instant)) {
-                DBHelper.Login(username, sharedSecret);
-                return new ResponseEntity<String>("Login done", HttpStatus.OK);
             }
+        }  catch (Throwable throwable) {
+            System.out.println("Entrou no catch");
+            throwable.printStackTrace();
         }
+        
+        System.out.println("DEU COCO");
         return new ResponseEntity<String>("Login Error", HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<String> Logout(String username) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
-        DBHelper.Logout(username);
-        return new ResponseEntity<String>("Logout Error", HttpStatus.BAD_REQUEST);
+        String sharedSecret = DBHelper.getSharedSecret(username);
+        return DBHelper.Logout(username , sharedSecret);
+        
     }
      /*public String RegisterWorker(User user) throws SQLException, ClassNotFoundException {
         //create a userId

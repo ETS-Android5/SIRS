@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.beans.PropertyEditorSupport;
+import java.net.http.HttpRequest;
 import java.sql.*;
 
 public class DBHelper {
@@ -64,39 +65,40 @@ public class DBHelper {
         connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
         ResultSet rs = null;
+        String SS ="";
         String message = "";
         HttpStatus httpStatus = null;
 
-        System.out.println(confirmRegistrationCode(code).toString());
 
-        if (confirmRegistrationCode(code).toString() != "NOT OK") {
-            System.out.println("errado");
+        if (confirmRegistrationCode(code) != "NOT OK" ) {
             message = confirmRegistrationCode(code).toString();
             httpStatus = HttpStatus.BAD_REQUEST;
             return new ResponseEntity<String>(message, httpStatus);
         }
 
-        String sql = "INSERT INTO user(username, password, sharedSecret, loggedIn) VALUES(?,?,? ?)";
+        String selectSql = "SELECT sharedSecret FROM registration where code = ?";
+        try (PreparedStatement selectPstmt = connection.prepareStatement(selectSql)) {
+            selectPstmt.setString(1, code);
+            rs = selectPstmt.executeQuery();
+            SS = rs.getString("sharedSecret");
 
+        } catch (SQLException e) {
+            System.out.println("Error selecting shared secret from DB");
+            System.out.println(e.getMessage());
+        }
+
+        String sql = "INSERT INTO user (username, password, sharedSecret, loggedIn) VALUES(?,?,?,?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+       
             pstmt.setString(1, username);
             pstmt.setInt(2, password);
-
-            String selectSql = "SELECT sharedSecret FROM registration where code = ?";
-            try (PreparedStatement selectPstmt = connection.prepareStatement(selectSql)) {
-                selectPstmt.setString(1, code);
-                rs = selectPstmt.executeQuery();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
-            System.out.println(rs.getString("sharedSecret"));
-            pstmt.setString(3, rs.getString("sharedSecret"));
+            pstmt.setString(3, SS);
             pstmt.setInt(4, 0);
 
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
+            System.out.println("Error inserting user into DB");
             System.out.println(e.getMessage());
         }
         finally
@@ -119,16 +121,16 @@ public class DBHelper {
         Connection connection = null;
         connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
-        String sql = "INSERT INTO user(loggedIn) VALUES(?) WHERE sharedSecret = ? and username = ?";
+        String sql = "UPDATE user SET loggedIn=1 where username=? and sharedSecret=?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, 1);
+            pstmt.setString(1, username);
             pstmt.setString(2, sharedSecret);
-            pstmt.setString(3, username);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            System.out.println("Error inserting login flag into user in the DB");
         }
         finally
         {
@@ -147,19 +149,20 @@ public class DBHelper {
 
     }
 
-    public static ResponseEntity<String> Logout(String username) throws  SQLException {
+    public static ResponseEntity<String> Logout(String username, String sharedSecret) throws  SQLException {
         Connection connection = null;
         connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
-        String sql = "INSERT INTO user(loggedIn) VALUES(?) WHERE username = ?";
+        String sql = "UPDATE user SET loggedIn=0 where username=? and sharedSecret=?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, 0);
-            pstmt.setString(2, username);
+            pstmt.setString(1, username);
+            pstmt.setString(1, sharedSecret);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            System.out.println("Error inserting logout flag into user in the DB");
         }
         finally
         {
@@ -180,7 +183,7 @@ public class DBHelper {
     }
 
 
-    public static ResponseEntity<String> confirmRegistrationCode(String code) throws  SQLException {
+    public static String confirmRegistrationCode(String code) throws  SQLException {
         Connection connection = null;
         connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
@@ -188,27 +191,20 @@ public class DBHelper {
         String message = "";
         HttpStatus httpStatus = null;
 
-        System.out.println("Estou aqui");
         try (PreparedStatement pstmt = connection.prepareStatement(other)) {
-            System.out.println("consegui");
             pstmt.setString(1, code);
-            System.out.println("alo");
             ResultSet rs = pstmt.executeQuery();
-            System.out.println("aqui");
             if (rs.next()) { //Code already in the registration table
                 message = "NOT OK";
-                System.out.println(message);
                 httpStatus = HttpStatus.BAD_REQUEST;
-                System.out.println("entrei");
             }
             else {
                 message = "OK";
-                System.out.println(message);
                 httpStatus = HttpStatus.OK;
-                System.out.println("continuei");
-            }
+           }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            System.out.println("Error selecting from registration in the DB");
         }
         finally {
             try {
@@ -218,7 +214,7 @@ public class DBHelper {
                 // connection close failed.
                 System.err.println(e);
             }
-            return new ResponseEntity<String>(message, httpStatus);
+            return message;
         }
     }
 
@@ -228,7 +224,7 @@ public class DBHelper {
 
         String message = "";
 
-        if (confirmRegistrationCode(code).toString() == "NOT OK") {
+        if (confirmRegistrationCode(code) == "NOT OK") {
             message = "NOT OK";
         }
 
@@ -245,6 +241,7 @@ public class DBHelper {
 
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
+                System.out.println("Error inserting code and shared secret in the DB");
             }
         }
         try {
@@ -264,14 +261,18 @@ public class DBHelper {
 
         String result = null;
 
-        String sql = "SELECT sharedSecret FROM user WHERE username = ?)";
+        String sql = "SELECT sharedSecret FROM user WHERE username = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, username);
             result = pstmt.executeQuery().getString("sharedSecret");
+            
+            System.out.println("Resultado-");
+            System.out.println(result);
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            System.out.println("Error selecting sharedsecret from USER in the DB");
         }
         try {
             if (connection != null)

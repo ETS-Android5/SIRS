@@ -21,7 +21,7 @@ import java.util.Map;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.StringEntity;
 
-@CrossOrigin( origins = {  "http://127.0.0.1:3000", "http://localhost:3000" })
+@CrossOrigin( origins = {  "http://192.168.37.4:3000", "http://localhost:3000" })
 @RestController
 public class ApplicationController {
 
@@ -49,26 +49,31 @@ public class ApplicationController {
         int passwordHash = payload.get("var2").toString().hashCode();
         String code = payload.get("var3").toString();
 
-        System.out.println(username);
-        System.out.println(passwordHash);
-        System.out.println(code);
-
         User userRegistration = new User(username, passwordHash);
-
+        
         return AppService.RegisterUser(userRegistration, code);
     }
 
     @PostMapping(value="/LogIn")
     public ResponseEntity<String> UserLogIn(@RequestBody Map<String , Object> payload) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+        
         String username = payload.get("var1").toString() ;
-        int code = (int) payload.get("var2");
+        int code = Integer.parseInt( payload.get("var2").toString() );
 
+        //int code2 = code.parseInt();
+
+        System.out.println(username);
+        System.out.println(code);
+        
+        
         return AppService.Login(username, code);
     }
 
     @PostMapping(value="/LogOut")
     public ResponseEntity<String> UserLogOut(@RequestBody Map<String , Object> payload) throws SQLException, ClassNotFoundException, NoSuchProviderException, NoSuchAlgorithmException {
+        
         String username = payload.get("var1").toString();
+        System.out.println(username);
 
         return AppService.Logout(username);
     }
